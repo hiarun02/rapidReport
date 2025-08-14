@@ -25,71 +25,6 @@ const TrackReport = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Mock data for demonstration
-  const mockReports: Record<string, ReportStatus> = {
-    "RPT-2024-001": {
-      id: "RPT-2024-001",
-      title: "Broken Street Light",
-      type: "Infrastructure",
-      location: "Main St & 5th Ave",
-      submittedDate: "2024-01-15",
-      lastUpdated: "2024-01-18",
-      status: "in-progress",
-      priority: "medium",
-      assignedTo: "City Maintenance Dept",
-      description:
-        "Street light at the intersection is not working, creating safety concerns for pedestrians.",
-      updates: [
-        {
-          date: "2024-01-18",
-          message: "Maintenance crew dispatched to assess the issue",
-          author: "City Maintenance",
-        },
-        {
-          date: "2024-01-16",
-          message: "Report reviewed and assigned to maintenance team",
-          author: "System Admin",
-        },
-        {
-          date: "2024-01-15",
-          message: "Report submitted successfully",
-          author: "System",
-        },
-      ],
-    },
-    "RPT-2024-002": {
-      id: "RPT-2024-002",
-      title: "Noise Complaint",
-      type: "Public Safety",
-      location: "Oak Street Residential Area",
-      submittedDate: "2024-01-20",
-      lastUpdated: "2024-01-22",
-      status: "resolved",
-      priority: "low",
-      assignedTo: "Police Department",
-      description:
-        "Excessive noise from construction work during restricted hours.",
-      updates: [
-        {
-          date: "2024-01-22",
-          message:
-            "Issue resolved. Construction company warned and agreed to comply with noise ordinances",
-          author: "Police Department",
-        },
-        {
-          date: "2024-01-21",
-          message: "Officer dispatched to investigate noise complaint",
-          author: "Police Department",
-        },
-        {
-          date: "2024-01-20",
-          message: "Report submitted successfully",
-          author: "System",
-        },
-      ],
-    },
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "submitted":
@@ -157,7 +92,7 @@ const TrackReport = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12">
+    <div className="min-h-fit bg-gradient-to-br from-gray-50 to-white py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -368,53 +303,6 @@ const TrackReport = () => {
             </div>
           </div>
         )}
-
-        {/* Help Section */}
-        <div className="mt-12 bg-gray-50 rounded-2xl p-8 border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">
-            Need Help?
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Don't have your Report ID?
-              </h4>
-              <p className="text-gray-600 mb-4">
-                Your report ID was provided when you submitted your report.
-                Check your email confirmation or contact support.
-              </p>
-              <Link
-                to="/submit-report"
-                className="text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
-              >
-                Submit a new report →
-              </Link>
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Contact Support
-              </h4>
-              <p className="text-gray-600 mb-4">
-                If you need assistance or have questions about your report, our
-                support team is here to help.
-              </p>
-              <div className="space-y-2">
-                <a
-                  href="mailto:support@rapidreport.com"
-                  className="block text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
-                >
-                  support@rapidreport.com
-                </a>
-                <a
-                  href="tel:+1-800-REPORT"
-                  className="block text-red-600 hover:text-red-700 font-medium transition-colors duration-200"
-                >
-                  +1-800-REPORT
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
