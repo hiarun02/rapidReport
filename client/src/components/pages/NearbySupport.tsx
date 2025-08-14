@@ -1,26 +1,9 @@
-import {useState, useEffect} from "react";
-
-interface SupportService {
-  id: string;
-  name: string;
-  category: string;
-  address: string;
-  phone: string;
-  website?: string;
-  hours: string;
-  distance: number;
-  rating: number;
-  description: string;
-  services: string[];
-  emergency: boolean;
-}
-
 const NearbySupport = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-24 mt-12">
+        <div className="text-center mb-12 mt-24">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Nearby Support Services
           </h1>

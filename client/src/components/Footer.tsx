@@ -12,45 +12,34 @@ const Footer = () => {
   ];
 
   const legalLinks = [
-    {name: "Privacy Policy", path: "/privacy"},
-    {name: "Terms of Service", path: "/terms"},
-    {name: "Cookie Policy", path: "/cookies"},
-    {name: "Data Protection", path: "/data-protection"},
-  ];
-
-  const supportLinks = [
-    {name: "Help Center", path: "/help"},
-    {name: "Contact Us", path: "/contact"},
-    {name: "Report Bug", path: "/bug-report"},
-    {name: "Feature Request", path: "/feature-request"},
+    {name: "Privacy", path: "/privacy"},
+    {name: "Terms", path: "/terms"},
+    {name: "Contact", path: "/contact"},
   ];
 
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <div className="mb-6">
-              <Link to="/" className="text-2xl font-bold">
-                Rapid<span className="text-red-500">Report</span>
-              </Link>
-            </div>
-            <p className="text-gray-400 mb-6 leading-relaxed">
+            <Link to="/" className="text-3xl font-bold mb-6 block">
+              Rapid<span className="text-red-500">Report</span>
+            </Link>
+            <p className="text-gray-400 text-lg leading-relaxed mb-8">
               Making communities safer through efficient incident reporting.
-              Connect citizens with authorities for faster response and
-              resolution.
             </p>
+
+            {/* Social Links */}
             <div className="flex space-x-4">
-              {/* Social Media Icons */}
               <a
                 href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-200"
+                className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-red-500 transition-all duration-200 hover:scale-110"
                 aria-label="Facebook"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-6 h-6"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -59,11 +48,11 @@ const Footer = () => {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-200"
+                className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-red-500 transition-all duration-200 hover:scale-110"
                 aria-label="Twitter"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-6 h-6"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -72,11 +61,11 @@ const Footer = () => {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-red-500 transition-colors duration-200"
+                className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center hover:bg-red-500 transition-all duration-200 hover:scale-110"
                 aria-label="LinkedIn"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-6 h-6"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -86,35 +75,16 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Navigation Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
-            <ul className="space-y-3">
+            <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
+            <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center group"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-lg"
                   >
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-red-500 transition-all duration-200 mr-0 group-hover:mr-2"></span>
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Support</h3>
-            <ul className="space-y-3">
-              {supportLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.path}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center group"
-                  >
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-red-500 transition-all duration-200 mr-0 group-hover:mr-2"></span>
                     {link.name}
                   </Link>
                 </li>
@@ -124,33 +94,24 @@ const Footer = () => {
 
           {/* Contact & Emergency */}
           <div>
-            <h3 className="text-lg font-semibold mb-6">Emergency & Contact</h3>
-            <div className="space-y-4">
+            <h3 className="text-xl font-semibold mb-6">Get Help</h3>
+            <div className="space-y-6">
               <div>
-                <p className="text-gray-400 text-sm mb-2">Emergency Hotline</p>
+                <p className="text-gray-400 mb-2">Emergency</p>
                 <a
                   href="tel:911"
-                  className="text-red-400 font-semibold text-lg hover:text-red-300 transition-colors duration-200"
+                  className="text-red-400 font-bold text-2xl hover:text-red-300 transition-colors duration-200"
                 >
-                  911
+                  Call 911
                 </a>
               </div>
               <div>
-                <p className="text-gray-400 text-sm mb-2">Support Email</p>
+                <p className="text-gray-400 mb-2">Support</p>
                 <a
                   href="mailto:support@rapidreport.com"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
+                  className="text-white hover:text-red-400 transition-colors duration-200 text-lg"
                 >
                   support@rapidreport.com
-                </a>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm mb-2">24/7 Support</p>
-                <a
-                  href="tel:+1-800-REPORT"
-                  className="text-gray-300 hover:text-white transition-colors duration-200"
-                >
-                  +1-800-REPORT
                 </a>
               </div>
             </div>
@@ -160,35 +121,24 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-gray-400 text-sm">
+            <div className="text-gray-400">
               © {currentYear} RapidReport. All rights reserved.
             </div>
 
-            <div className="flex flex-wrap justify-center md:justify-end space-x-6">
+            <div className="flex space-x-8">
               {legalLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
-                  className="text-gray-400 hover:text-white text-sm transition-colors duration-200"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
                 >
                   {link.name}
                 </Link>
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Emergency Banner */}
-      <div className="bg-red-600 text-white py-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm">
-            <span className="font-semibold">
-              24/7 Emergency Response System
-            </span>
-          </p>
         </div>
       </div>
     </footer>

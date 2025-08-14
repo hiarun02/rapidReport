@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {Link} from "react-router-dom";
 
 interface ReportStatus {
   id: string;
@@ -122,7 +121,7 @@ const TrackReport = () => {
                   value={reportId}
                   onChange={(e) => setReportId(e.target.value)}
                   placeholder="Enter your report ID (e.g., RPT-2024-001)"
-                  className="w-full px-4 py-4 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4">
                   <svg
@@ -145,7 +144,7 @@ const TrackReport = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-4 px-8 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white py-3 px-8 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center space-x-2">

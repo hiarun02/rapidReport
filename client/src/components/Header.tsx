@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 const navItems = [
   {
@@ -15,7 +15,7 @@ const navItems = [
     path: "/track-report",
   },
   {
-    name: "Near by Support",
+    name: "Nearby Support",
     path: "/near-by-support",
   },
   {
@@ -26,13 +26,30 @@ const navItems = [
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className=" sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-gray-200 shadow-sm">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-lg"
+          : "bg-white/95 backdrop-blur-sm border-b border-transparent shadow-sm"
+      }`}
+    >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -109,7 +126,13 @@ const Header = () => {
               : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200 ">
+          <div
+            className={`px-2 pt-2 pb-3 space-y-1 border-t transition-all duration-300 ${
+              isScrolled
+                ? "bg-white/80 backdrop-blur-md border-gray-200/50"
+                : "bg-white border-gray-200"
+            }`}
+          >
             {navItems.map((item) => (
               <Link
                 key={item.name}
