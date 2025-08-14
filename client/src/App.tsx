@@ -6,11 +6,13 @@ import SubmitReport from "./components/pages/SubmitReport";
 import TrackReport from "./components/pages/TrackReport";
 import NearbySupport from "./components/pages/NearbySupport";
 import HowItWorks from "./components/pages/HowItWorks";
+import NotFound from "./components/pages/NotFound";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <NotFound />,
 
     children: [
       {
