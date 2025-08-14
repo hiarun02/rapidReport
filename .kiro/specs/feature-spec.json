@@ -1,0 +1,23 @@
+{
+    "name": "Incident Reporting UI Spec",
+    "description": "Spec for the React + TypeScript frontend of the ReportNow app",
+    "version": "1.0.0",
+    "components": [
+      {
+        "name": "ReportForm",
+        "props": {
+          "title": "string",
+          "description": "string",
+          "location": "string",
+          "image": "File | null"
+        }
+      },
+      {
+        "name": "ReportTracker",
+        "props": {
+          "trackingId": "string"
+        }
+      }
+    ]
+  }
+  
