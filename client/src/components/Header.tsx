@@ -15,7 +15,7 @@ const navItems = [
     path: "/track-report",
   },
   {
-    name: "Nearby Support",
+    name: "Near by Support",
     path: "/near-by-support",
   },
   {
