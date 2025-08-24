@@ -1,5 +1,3 @@
-import React from "react";
-
 const FAQSection = () => {
   return (
     <div className="bg-gray-50 py-20">
