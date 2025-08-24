@@ -11,16 +11,10 @@ const Footer = () => {
     {name: "Nearby Support", path: "/near-by-support"},
   ];
 
-  const legalLinks = [
-    {name: "Privacy", path: "/privacy"},
-    {name: "Terms", path: "/terms"},
-    {name: "Contact", path: "/contact"},
-  ];
-
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
@@ -83,7 +77,7 @@ const Footer = () => {
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 text-lg"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -94,22 +88,22 @@ const Footer = () => {
 
           {/* Contact & Emergency */}
           <div>
-            <h3 className="text-xl font-semibold mb-6">Get Help</h3>
+            <h3 className="text-lg font-semibold mb-2">Get Help</h3>
             <div className="space-y-6">
               <div>
                 <p className="text-gray-400 mb-2">Emergency</p>
                 <a
                   href="tel:911"
-                  className="text-red-400 font-bold text-2xl hover:text-red-300 transition-colors duration-200"
+                  className="text-red-400 font-bold text-sm hover:text-red-300 transition-colors duration-200"
                 >
                   Call 911
                 </a>
               </div>
               <div>
-                <p className="text-gray-400 mb-2">Support</p>
+                <p className="text-gray-400 ">Email</p>
                 <a
                   href="mailto:support@rapidreport.com"
-                  className="text-white hover:text-red-400 transition-colors duration-200 text-lg"
+                  className="text-white hover:text-red-400 transition-colors duration-200 text-sm"
                 >
                   support@rapidreport.com
                 </a>
@@ -121,22 +115,10 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+          <div className="flex  justify-center items-center space-y-4 md:space-y-0">
             <div className="text-gray-400">
               © {currentYear} RapidReport. All rights reserved.
-            </div>
-
-            <div className="flex space-x-8">
-              {legalLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                >
-                  {link.name}
-                </Link>
-              ))}
             </div>
           </div>
         </div>
