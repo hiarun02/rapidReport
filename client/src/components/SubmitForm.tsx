@@ -1,4 +1,4 @@
-import {useState, useRef} from "react";
+import {useState, useRef, useCallback, useEffect} from "react";
 import {
   Select,
   SelectContent,
@@ -13,6 +13,7 @@ import {Button} from "./ui/button";
 const SubmitForm = () => {
   // Form data interface
   interface FormData {
+    reportId: string;
     reportType: "emergency" | "non-emergency" | "";
     imageFile: File | null;
     imagePreview: string | null;
@@ -22,7 +23,16 @@ const SubmitForm = () => {
     location: string;
   }
 
+  // Generate a unique report ID
+  const generateReportID = useCallback(() => {
+    const timestamp = Date.now().toString();
+    const randomPart = Math.random().toString(36).substring(2, 15);
+    const reportPrefix = "RPT";
+    return `${reportPrefix}-${timestamp.slice(-8)}-${randomPart.toUpperCase()}`;
+  }, []);
+
   const [formData, setFormData] = useState<FormData>({
+    reportId: "",
     reportType: "",
     imageFile: null,
     imagePreview: null,
@@ -32,7 +42,13 @@ const SubmitForm = () => {
     location: "",
   });
 
-  console.log(formData);
+  // Generate report ID when component mounts
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      reportId: generateReportID(),
+    }));
+  }, [generateReportID]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -71,8 +87,23 @@ const SubmitForm = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form Data:", formData);
-    // Handle form submission - you can send this data to your API
+
+    // Add timestamp to form data
+    const submissionData = {
+      ...formData,
+      submittedAt: new Date().toISOString(),
+      status: "submitted",
+    };
+
+    console.log("Report Submitted:", submissionData);
+    console.log("Report ID:", formData.reportId);
+
+    // Here you would typically send the data to your API
+    // Example: await submitReport(submissionData);
+
+    alert(
+      `Report submitted successfully! Your Report ID is: ${formData.reportId}`
+    );
   };
 
   return (
