@@ -11,18 +11,29 @@ import {Input} from "./ui/input";
 import {Button} from "./ui/button";
 
 const SubmitForm = () => {
-  // Initialize form data state
+  // Form data interface
+  interface FormData {
+    reportType: "emergency" | "non-emergency" | "";
+    imageFile: File | null;
+    imagePreview: string | null;
+    incidentType: string;
+    title: string;
+    description: string;
+    location: string;
+  }
 
-  const [formData, setFormData] = useState({
-    reportType: String(null),
+  const [formData, setFormData] = useState<FormData>({
+    reportType: "",
     imageFile: null,
-    incidentType: null,
+    imagePreview: null,
+    incidentType: "",
     title: "",
     description: "",
     location: "",
   });
 
-  const [image, setImage] = useState<string | null>(null);
+  console.log(formData);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,22 +41,38 @@ const SubmitForm = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string);
+        setFormData((prev) => ({
+          ...prev,
+          imageFile: file,
+          imagePreview: reader.result as string,
+        }));
       };
       reader.readAsDataURL(file);
     }
   };
 
   const removeImage = () => {
-    setImage(null);
+    setFormData((prev) => ({
+      ...prev,
+      imageFile: null,
+      imagePreview: null,
+    }));
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
+  const updateFormData = (field: keyof FormData, value: unknown) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Handle form submission
+    console.log("Form Data:", formData);
+    // Handle form submission - you can send this data to your API
   };
 
   return (
@@ -56,7 +83,7 @@ const SubmitForm = () => {
           {/* Emergency Box */}
           <button
             type="button"
-            onClick={() => setFormData({...formData, reportType: "emergency"})}
+            onClick={() => updateFormData("reportType", "emergency")}
             className={`border rounded-lg p-5 flex flex-col items-center gap-2 transition-all w-full max-w-xs focus:outline-none
             ${
               formData.reportType === "emergency"
@@ -91,9 +118,7 @@ const SubmitForm = () => {
           {/* Non-Emergency Box */}
           <button
             type="button"
-            onClick={() =>
-              setFormData({...formData, reportType: "non-emergency"})
-            }
+            onClick={() => updateFormData("reportType", "non-emergency")}
             className={`border rounded-lg p-5 flex flex-col items-center gap-2 transition-all w-full max-w-xs focus:outline-none
             ${
               formData.reportType === "non-emergency"
@@ -137,9 +162,13 @@ const SubmitForm = () => {
           <label
             htmlFor="image-upload"
             className={`border-2 px-8 py-8 w-full block rounded-lg border-dashed hover:border-red-400/50 hover:bg-red-400/10 cursor-pointer
-            ${image ? "border-red-400/50 bg-sky-400/10" : "border-gray-300"}`}
+            ${
+              formData.imagePreview
+                ? "border-red-400/50 bg-sky-400/10"
+                : "border-gray-300"
+            }`}
           >
-            {!image ? (
+            {!formData.imagePreview ? (
               <div className="flex flex-col justify-center items-center space-y-4">
                 <svg
                   className="w-11 h-11 text-zinc-500"
@@ -182,7 +211,7 @@ const SubmitForm = () => {
                   </svg>
                 </div>
                 <img
-                  src={image}
+                  src={formData.imagePreview}
                   alt="Uploaded preview"
                   className="rounded-xl max-h-60 object-contain border border-gray-200"
                 />
@@ -195,7 +224,10 @@ const SubmitForm = () => {
           <Label htmlFor="incident-type" className="block mb-3">
             Incident Type
           </Label>
-          <Select>
+          <Select
+            value={formData.incidentType}
+            onValueChange={(value) => updateFormData("incidentType", value)}
+          >
             <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
@@ -203,6 +235,12 @@ const SubmitForm = () => {
               <SelectItem value="theft">Theft</SelectItem>
               <SelectItem value="vandalism">Vandalism</SelectItem>
               <SelectItem value="assault">Assault</SelectItem>
+              <SelectItem value="safety-hazard">Safety Hazard</SelectItem>
+              <SelectItem value="infrastructure">Infrastructure</SelectItem>
+              <SelectItem value="environmental">Environmental</SelectItem>
+              <SelectItem value="property">Property</SelectItem>
+              <SelectItem value="traffic">Traffic</SelectItem>
+              <SelectItem value="noise">Noise</SelectItem>
               <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
@@ -214,6 +252,8 @@ const SubmitForm = () => {
           </Label>
           <Input
             id="location"
+            value={formData.location}
+            onChange={(e) => updateFormData("location", e.target.value)}
             placeholder="Enter the location"
             className="border border-gray-300 rounded-md p-2 w-full"
           />
@@ -225,6 +265,8 @@ const SubmitForm = () => {
           </Label>
           <Input
             id="title"
+            value={formData.title}
+            onChange={(e) => updateFormData("title", e.target.value)}
             placeholder="Enter a brief title for your report"
             className="border border-gray-300 rounded-md p-2 w-full"
           />
@@ -236,8 +278,10 @@ const SubmitForm = () => {
           </Label>
           <textarea
             id="description"
+            value={formData.description}
+            onChange={(e) => updateFormData("description", e.target.value)}
             rows={4}
-            className="w-full border border-gray-300  rounded-md p-2 "
+            className="w-full border border-gray-300 rounded-md p-2"
             placeholder="Provide a detailed description of the incident"
           />
         </div>
