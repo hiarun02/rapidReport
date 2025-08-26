@@ -31,6 +31,7 @@ const SubmitForm = () => {
     return `${reportPrefix}-${timestamp.slice(-8)}-${randomPart.toUpperCase()}`;
   }, []);
 
+  // const [error, setError] = useState<any>({});
   const [formData, setFormData] = useState<FormData>({
     reportId: "",
     reportType: "",
@@ -85,25 +86,22 @@ const SubmitForm = () => {
     }));
   };
 
+  // formValidation
+
+  // const formValidation = () => {
+  //   const newError: any = {};
+  //   if (!formData.reportType) newError.reportType = "you miss report type..";
+  //   if (!formData.title) newError.title = "Title is required";
+  //   setError(newError);
+  // };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // Add timestamp to form data
-    const submissionData = {
-      ...formData,
-      submittedAt: new Date().toISOString(),
-      status: "submitted",
-    };
-
-    console.log("Report Submitted:", submissionData);
-    console.log("Report ID:", formData.reportId);
-
-    // Here you would typically send the data to your API
-    // Example: await submitReport(submissionData);
-
-    alert(
-      `Report submitted successfully! Your Report ID is: ${formData.reportId}`
-    );
+    // if (formValidation()) {
+    //   console.log("form submit successfully..");
+    // } else {
+    //   console.log("form has errro");
+    // }
   };
 
   return (
@@ -179,6 +177,9 @@ const SubmitForm = () => {
               <p className="text-gray-500 text-sm">General Inquiry</p>
             </div>
           </button>
+          {/* {error.reportType && (
+            <p className="text-red-600">{error.reportType}</p>
+          )} */}
         </div>
         {/* image upload */}
         <div className="relative">
@@ -301,6 +302,9 @@ const SubmitForm = () => {
             placeholder="Enter a brief title for your report"
             className="border border-gray-300 rounded-md p-2 w-full"
           />
+          {/* {error.title && (
+            <p className="text-red-600 text-sm pt-2">{error.title}</p>
+          )} */}
         </div>
         {/* Report Description */}
         <div className="mb-5">
