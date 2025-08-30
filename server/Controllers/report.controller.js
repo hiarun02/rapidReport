@@ -2,15 +2,11 @@ import {Report} from "../models/report.model.js";
 
 export const submitReport = async (req, res) => {
   try {
-    const {
-      reportId,
-      reportType,
-      imageFile,
-      incidentType,
-      title,
-      description,
-      location,
-    } = req.body;
+    const {reportId, reportType, incidentType, title, description, location} =
+      req.body;
+
+    // Handle uploaded file
+    const imageFile = req.file ? req.file.filename : null;
 
     if (
       !reportId ||

@@ -1,0 +1,39 @@
+import {REPORT_SUBMIT_ROUTE} from "@/utils/constants";
+import axios from "axios";
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
+});
+
+interface FormData {
+  reportId: string;
+  reportType: "emergency" | "non-emergency" | "";
+  imageFile: File | null;
+  imagePreview: string | null;
+  incidentType: string;
+  title: string;
+  description: string;
+  location: string;
+}
+
+export const submitForm = async (formData: FormData) => {
+  const submitData = new FormData();
+
+  submitData.append("reportId", formData.reportId);
+  submitData.append("reportType", formData.reportType);
+  submitData.append("incidentType", formData.incidentType);
+  submitData.append("title", formData.title);
+  submitData.append("description", formData.description);
+  submitData.append("location", formData.location);
+
+  if (formData.imageFile) {
+    submitData.append("imageFile", formData.imageFile);
+  }
+
+  return await api.post(REPORT_SUBMIT_ROUTE, submitData, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

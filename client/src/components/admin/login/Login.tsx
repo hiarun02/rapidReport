@@ -1,15 +1,10 @@
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {
-  LogInIcon,
-  EyeIcon,
-  EyeOffIcon,
-  ShieldCheckIcon,
-  AlertCircleIcon,
-} from "lucide-react";
+import {LogInIcon, EyeIcon, EyeOffIcon, ShieldCheckIcon} from "lucide-react";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {toast} from "sonner";
 
 const Login = () => {
   interface FormData {
@@ -17,52 +12,21 @@ const Login = () => {
     password: string;
   }
 
-  interface FormErrors {
-    email?: string;
-    password?: string;
-    general?: string;
-  }
-
   const [form, setForm] = useState<FormData>({
     email: "",
     password: "",
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [loginAttempts, setLoginAttempts] = useState(0);
 
   const navigate = useNavigate();
-
-  // Validation function
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!form.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!form.password) {
-      newErrors.password = "Password is required";
-    } else if (form.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
-
     setIsLoading(true);
-    setErrors({});
 
     try {
       // Simulate API call
@@ -71,26 +35,12 @@ const Login = () => {
       // temp logic
       if (form.email === "admin@gmail.com" && form.password === "admin123") {
         navigate("/admin/dashboard");
+        toast("Logged in Successfully...");
       } else {
-        setLoginAttempts((prev) => prev + 1);
-        setErrors({
-          general: "Invalid email or password. Please try again.",
-        });
+        toast("Invalid email or password. Please try again.");
       }
-    } catch (error) {
-      setErrors({
-        general: "Login failed. Please check your connection and try again.",
-      });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Update form data
-  const updateForm = (field: keyof FormData, value: string) => {
-    setForm((prev) => ({...prev, [field]: value}));
-    if (errors[field]) {
-      setErrors((prev) => ({...prev, [field]: undefined}));
     }
   };
 
@@ -107,27 +57,8 @@ const Login = () => {
           </h1>
           <p className="text-gray-600">Sign in to access the dashboard</p>
         </div>
-
         {/* Login Form */}
         <div className="bg-white rounded-xl shadow p-8 border border-gray-100">
-          {/* General Error Message */}
-          {errors.general && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-              <AlertCircleIcon className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <p className="text-red-700 text-sm">{errors.general}</p>
-            </div>
-          )}
-
-          {/* Login Attempts Warning */}
-          {loginAttempts >= 2 && (
-            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-800 text-sm">
-                Multiple failed attempts detected. Please verify your
-                credentials.
-              </p>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
@@ -138,23 +69,16 @@ const Login = () => {
                 Email Address
               </Label>
               <Input
-                id="email"
                 name="email"
                 type="email"
                 value={form.email}
-                onChange={(e) => updateForm("email", e.target.value)}
+                onChange={(e) =>
+                  setForm((prev) => ({...prev, email: e.target.value}))
+                }
                 placeholder="admin@gmail.com"
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${
-                  errors.email ? "border-red-300 bg-red-50" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors`}
                 disabled={isLoading}
               />
-              {errors.email && (
-                <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                  <AlertCircleIcon className="w-4 h-4" />
-                  {errors.email}
-                </p>
-              )}
             </div>
 
             {/* Password Field */}
@@ -167,17 +91,14 @@ const Login = () => {
               </Label>
               <div className="relative">
                 <Input
-                  id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   value={form.password}
-                  onChange={(e) => updateForm("password", e.target.value)}
+                  onChange={(e) =>
+                    setForm((prev) => ({...prev, password: e.target.value}))
+                  }
                   placeholder="admin123"
-                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors ${
-                    errors.password
-                      ? "border-red-300 bg-red-50"
-                      : "border-gray-300"
-                  }`}
+                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors `}
                   disabled={isLoading}
                 />
                 <button
@@ -193,12 +114,6 @@ const Login = () => {
                   )}
                 </button>
               </div>
-              {errors.password && (
-                <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-                  <AlertCircleIcon className="w-4 h-4" />
-                  {errors.password}
-                </p>
-              )}
             </div>
 
             {/* Submit Button */}
@@ -221,15 +136,7 @@ const Login = () => {
             </Button>
           </form>
         </div>
-        {/* Demo Credentials */}
-        {/* <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
-          <p className="text-sm font-medium text-red-800 mb-2">
-            Demo Credentials:
-          </p>
-          <p className="text-sm text-red-700">Email: admin@gmail.com</p>
-          <p className="text-sm text-red-700">Password: admin123</p>
-        </div> */}
-        {/* Footer */}
+
         <div className="text-center mt-8">
           <p className="text-sm text-gray-600">
             Secure admin access • Rapid
