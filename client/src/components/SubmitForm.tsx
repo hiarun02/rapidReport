@@ -9,6 +9,9 @@ import {
 import {Label} from "./ui/label";
 import {Input} from "./ui/input";
 import {Button} from "./ui/button";
+import {submitForm} from "@/api/api";
+import {toast} from "sonner";
+import {AxiosError} from "axios";
 
 const SubmitForm = () => {
   // Form data interface
@@ -31,7 +34,8 @@ const SubmitForm = () => {
     return `${reportPrefix}-${timestamp.slice(-8)}-${randomPart.toUpperCase()}`;
   }, []);
 
-  // const [error, setError] = useState<any>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedReportId, setSubmittedReportId] = useState("");
   const [formData, setFormData] = useState<FormData>({
     reportId: "",
     reportType: "",
@@ -79,30 +83,131 @@ const SubmitForm = () => {
     }
   };
 
-  const updateFormData = (field: keyof FormData, value: unknown) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Report ID copied to clipboard!");
+    } catch (error) {
+      toast.error("Failed to copy to clipboard");
+    }
   };
 
-  // formValidation
+  const resetForm = () => {
+    setIsSubmitted(false);
+    setSubmittedReportId("");
+    setFormData({
+      reportId: generateReportID(),
+      reportType: "",
+      imageFile: null,
+      imagePreview: null,
+      incidentType: "",
+      title: "",
+      description: "",
+      location: "",
+    });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
-  // const formValidation = () => {
-  //   const newError: any = {};
-  //   if (!formData.reportType) newError.reportType = "you miss report type..";
-  //   if (!formData.title) newError.title = "Title is required";
-  //   setError(newError);
-  // };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // if (formValidation()) {
-    //   console.log("form submit successfully..");
-    // } else {
-    //   console.log("form has errro");
-    // }
+    console.log(formData);
+    try {
+      const response = await submitForm(formData);
+      toast.success(response.data.message);
+      setSubmittedReportId(response.data.reportId);
+      setIsSubmitted(true);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || "Something went wrong!");
+      } else {
+        toast.error("An unexpected error occurred!");
+      }
+      console.error(error);
+    }
   };
+
+  // Show success message if form is submitted
+  if (isSubmitted) {
+    return (
+      <div className="mx-auto max-w-3xl px-5 border border-gray-200 shadow-sm rounded-lg bg-white my-10">
+        <div className="py-10 text-center">
+          {/* Success Icon */}
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <svg
+                className="w-8 h-8 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Report Submitted Successfully!
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Your report has been received and is being processed.
+          </p>
+
+          {/* Report ID Display */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Your Report ID
+            </Label>
+            <div className="flex items-center gap-2">
+              <Input
+                value={submittedReportId}
+                readOnly
+                className="flex-1 bg-white border-gray-300"
+              />
+              <Button
+                type="button"
+                onClick={() => copyToClipboard(submittedReportId)}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2"
+              >
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                Copy
+              </Button>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">
+              Save this ID to track your report status
+            </p>
+          </div>
+
+          {/* Submit Another Report Button */}
+          <Button
+            type="button"
+            onClick={resetForm}
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2"
+          >
+            Submit Another Report
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-5 border border-gray-200 shadow-sm rounded-lg bg-white my-10">
@@ -112,7 +217,12 @@ const SubmitForm = () => {
           {/* Emergency Box */}
           <button
             type="button"
-            onClick={() => updateFormData("reportType", "emergency")}
+            onClick={() =>
+              setFormData((prev) => ({
+                ...prev,
+                reportType: "emergency",
+              }))
+            }
             className={`border rounded-lg p-5 flex flex-col items-center gap-2 transition-all w-full max-w-xs focus:outline-none
             ${
               formData.reportType === "emergency"
@@ -147,7 +257,12 @@ const SubmitForm = () => {
           {/* Non-Emergency Box */}
           <button
             type="button"
-            onClick={() => updateFormData("reportType", "non-emergency")}
+            onClick={() =>
+              setFormData((prev) => ({
+                ...prev,
+                reportType: "non-emergency",
+              }))
+            }
             className={`border rounded-lg p-5 flex flex-col items-center gap-2 transition-all w-full max-w-xs focus:outline-none
             ${
               formData.reportType === "non-emergency"
@@ -177,9 +292,6 @@ const SubmitForm = () => {
               <p className="text-gray-500 text-sm">General Inquiry</p>
             </div>
           </button>
-          {/* {error.reportType && (
-            <p className="text-red-600">{error.reportType}</p>
-          )} */}
         </div>
         {/* image upload */}
         <div className="relative">
@@ -258,7 +370,9 @@ const SubmitForm = () => {
           </Label>
           <Select
             value={formData.incidentType}
-            onValueChange={(value) => updateFormData("incidentType", value)}
+            onValueChange={(value) =>
+              setFormData((prev) => ({...prev, incidentType: value}))
+            }
           >
             <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
               <SelectValue placeholder="Select a category" />
@@ -285,7 +399,12 @@ const SubmitForm = () => {
           <Input
             id="location"
             value={formData.location}
-            onChange={(e) => updateFormData("location", e.target.value)}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                location: e.target.value,
+              }))
+            }
             placeholder="Enter the location"
             className="border border-gray-300 rounded-md p-2 w-full"
           />
@@ -298,13 +417,15 @@ const SubmitForm = () => {
           <Input
             id="title"
             value={formData.title}
-            onChange={(e) => updateFormData("title", e.target.value)}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                title: e.target.value,
+              }))
+            }
             placeholder="Enter a brief title for your report"
             className="border border-gray-300 rounded-md p-2 w-full"
           />
-          {/* {error.title && (
-            <p className="text-red-600 text-sm pt-2">{error.title}</p>
-          )} */}
         </div>
         {/* Report Description */}
         <div className="mb-5">
@@ -314,7 +435,12 @@ const SubmitForm = () => {
           <textarea
             id="description"
             value={formData.description}
-            onChange={(e) => updateFormData("description", e.target.value)}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
             rows={4}
             className="w-full border border-gray-300 rounded-md p-2"
             placeholder="Provide a detailed description of the incident"
