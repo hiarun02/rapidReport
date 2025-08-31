@@ -1,5 +1,8 @@
 import express from "express";
-import {submitReport} from "../Controllers/report.controller.js";
+import {
+  submitReport,
+  findReportByReportId,
+} from "../Controllers/report.controller.js";
 import multer from "multer";
 
 const router = express.Router();
@@ -25,5 +28,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage});
 
 router.post("/submit-report", upload.single("imageFile"), submitReport);
+
+router.get("/track-report/:reportId", findReportByReportId);
 
 export default router;
