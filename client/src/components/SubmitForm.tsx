@@ -112,7 +112,6 @@ const SubmitForm = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData);
     try {
       const response = await submitForm(formData);
       toast.success(response.data.message);
@@ -131,7 +130,7 @@ const SubmitForm = () => {
   // Show success message if form is submitted
   if (isSubmitted) {
     return (
-      <div className="mx-auto max-w-3xl px-5 border border-gray-200 shadow-sm rounded-lg bg-white my-10">
+      <div className="mx-auto max-w-3xl px-5 border border-gray-200 rounded-2xl bg-white mb-10">
         <div className="py-10 text-center">
           {/* Success Icon */}
           <div className="flex justify-center mb-6">
@@ -210,7 +209,7 @@ const SubmitForm = () => {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-5 border border-gray-200 shadow-sm rounded-lg bg-white my-10">
+    <div className="mx-auto max-w-3xl px-5 border border-gray-200 rounded-2xl bg-white mb-10">
       <form className="" onSubmit={handleSubmit}>
         {/* report type */}
         <div className="flex justify-between items-center py-5 gap-4 flex-col sm:flex-row">
@@ -223,7 +222,7 @@ const SubmitForm = () => {
                 reportType: "emergency",
               }))
             }
-            className={`border rounded-lg p-5 flex flex-col items-center gap-2 transition-all w-full max-w-xs focus:outline-none
+            className={`border rounded-lg p-10 flex flex-col items-center gap-2 transition-all w-full focus:outline-none
             ${
               formData.reportType === "emergency"
                 ? "border-red-500 ring-2 ring-red-200 bg-red-50"
@@ -263,7 +262,7 @@ const SubmitForm = () => {
                 reportType: "non-emergency",
               }))
             }
-            className={`border rounded-lg p-5 flex flex-col items-center gap-2 transition-all w-full max-w-xs focus:outline-none
+            className={`border rounded-lg p-10 flex flex-col items-center gap-2 transition-all w-full focus:outline-none
             ${
               formData.reportType === "non-emergency"
                 ? "border-orange-500 ring-2 ring-orange-200 bg-orange-50"

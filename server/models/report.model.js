@@ -5,16 +5,17 @@ const reportSchema = mongoose.Schema(
     reportId: {
       type: String,
       required: true,
+      unique: true,
     },
     reportType: {
       type: String,
       required: true,
+      enum: ["emergency", "non-emergency"],
     },
     image: {
       type: String,
       default: "",
     },
-
     incidentType: {
       type: String,
       required: true,
@@ -30,6 +31,18 @@ const reportSchema = mongoose.Schema(
     location: {
       type: String,
       required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "in-progress", "resolved", "closed"],
+      default: "pending",
+    },
+    priority: {
+      type: String,
+      enum: ["low", "medium", "high", "critical"],
+      default: function () {
+        return this.reportType === "emergency" ? "high" : "medium";
+      },
     },
   },
   {

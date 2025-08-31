@@ -4,7 +4,7 @@ const SubmitReport = () => {
   return (
     <div className="min-h-screen w-full">
       {/* Header section */}
-      <div className="max-w-6xl mx-auto flex flex-col justify-center items-center lg:py-12">
+      <div className="max-w-5xl mx-auto flex flex-col justify-center items-center py-12 lg:py-12">
         <h2 className="md:text-5xl font-bold text-center">
           Speak Up, Stay Safe
         </h2>
