@@ -37,6 +37,12 @@ export const submitForm = async (formData: FormData) => {
     },
   });
 };
+
+export const trackReportById = async (reportId: string) => {
+  return await api.get(`/api/track-report/${reportId}`, {
+    withCredentials: true,
+  });
+};
 // Admin API functions
 export const getAllReports = async () => {
   return await api.get("/api/admin/reports", {
