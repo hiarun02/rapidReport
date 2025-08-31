@@ -37,3 +37,29 @@ export const submitForm = async (formData: FormData) => {
     },
   });
 };
+// Admin API functions
+export const getAllReports = async () => {
+  return await api.get("/api/admin/reports", {
+    withCredentials: true,
+  });
+};
+
+export const updateReportStatus = async (reportId: string, status: string) => {
+  return await api.patch(
+    `/api/admin/reports/${reportId}/status`,
+    {status},
+    {withCredentials: true}
+  );
+};
+
+export const getReportById = async (reportId: string) => {
+  return await api.get(`/api/admin/reports/${reportId}`, {
+    withCredentials: true,
+  });
+};
+
+export const deleteReport = async (reportId: string) => {
+  return await api.delete(`/api/admin/reports/${reportId}`, {
+    withCredentials: true,
+  });
+};

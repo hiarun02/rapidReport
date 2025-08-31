@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import {DbConnect} from "./utils/DBConnection.js";
 import submitReport from "./routes/report.route.js";
+import adminRoutes from "./routes/admin.route.js";
 import cors from "cors";
 import multer from "multer";
 
@@ -54,8 +55,8 @@ app.use("/uploads", express.static("uploads"));
 const PORT = process.env.PORT;
 
 // apis
-
 app.use("/api", submitReport);
+app.use("/api/admin", adminRoutes);
 
 app.listen(PORT, () => {
   console.log("Server listen at PORT : ", PORT);
