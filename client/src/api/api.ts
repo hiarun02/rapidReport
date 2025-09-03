@@ -43,7 +43,8 @@ export const trackReportById = async (reportId: string) => {
     withCredentials: true,
   });
 };
-// Admin API functions
+
+// // Admin API functions
 export const getAllReports = async () => {
   return await api.get("/api/admin/reports", {
     withCredentials: true,
