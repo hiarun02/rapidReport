@@ -29,7 +29,7 @@ const TrackReport = () => {
   const handleFindReport = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!reportId.trim()) {
+    if (!reportId.trim()) { // 
       toast.error("Please enter a report ID");
       return;
     }
@@ -166,8 +166,8 @@ const TrackReport = () => {
     }
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-20">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:py-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-20 h-fit">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
         {/* Show header and search form only when no report is displayed */}
         {!reportData && (
           <>
@@ -198,7 +198,7 @@ const TrackReport = () => {
                       id="reportId"
                       value={reportId}
                       onChange={(e) => setReportId(e.target.value)}
-                      placeholder="Enter your report ID (e.g., RPT-12345678-ABC123)"
+                      placeholder="Enter your report ID"
                       className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
                       disabled={isLoading}
                     />
@@ -273,7 +273,6 @@ const TrackReport = () => {
                   <li>• Make sure you've entered the complete Report ID</li>
                   <li>• Report IDs are case-sensitive</li>
                   <li>• Check for any extra spaces or characters</li>
-                  <li>• Report IDs typically start with "RPT-"</li>
                 </ul>
               </div>
               <Button
@@ -281,7 +280,7 @@ const TrackReport = () => {
                   setHasSearched(false);
                   setReportId("");
                 }}
-                className="mt-6 bg-red-600 hover:bg-red-700"
+                className="mt-6 bg-red-600 text-white hover:bg-red-700"
               >
                 Try Another Search
               </Button>
@@ -291,7 +290,7 @@ const TrackReport = () => {
 
         {/* Show report card when report is found */}
         {reportData && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             {reportData ? (
               <div className="p-8">
                 {/* Report Header */}
@@ -478,19 +477,19 @@ const TrackReport = () => {
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 mt-8">
                   <Button
+                    className="flex-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"
                     onClick={() => {
                       setReportData(null);
                       setReportId("");
                       setHasSearched(false);
                     }}
                     variant="outline"
-                    className="flex-1"
                   >
                     Search Another Report
                   </Button>
                   <Button
                     onClick={() => window.print()}
-                    className="flex-1 bg-red-500 hover:bg-red-700 text-white"
+                    className="flex-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"
                   >
                     Print Report Details
                   </Button>
