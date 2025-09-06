@@ -6,7 +6,7 @@ import {Label} from "@/components/ui/label";
 import {useAdminStore} from "@/store/useAdminStore";
 import {LogInIcon, EyeIcon, EyeOffIcon, ShieldCheckIcon} from "lucide-react";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import {toast} from "sonner";
 
 const Login = () => {
@@ -25,6 +25,10 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the intended destination from location state, default to dashboard
+  const from = location.state?.from?.pathname || "/admin/dashboard";
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,10 +38,10 @@ const Login = () => {
       const {email, password} = form;
       const response = await adminLogin(email, password);
       if (response.status === 200 || response.data.status === 200) {
-        navigate("/admin/dashboard");
         const {admin} = response.data;
         setAdmin(admin);
         toast.success(response.data.message || "Logged in successfully 🎉");
+        navigate(from, {replace: true});
       } else {
         toast.error(response?.data?.message || "Invalid credentials!");
       }

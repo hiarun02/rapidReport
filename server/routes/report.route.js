@@ -1,6 +1,8 @@
 import express from "express";
-import {submitReport} from "../Controllers/report.controller.js";
-import {findReportByReportId} from "../Controllers/trackreport.controller.js";
+import {
+  findReportByReportId,
+  submitReport,
+} from "../Controllers/report.controller.js";
 import {multerUpload} from "../utils/multer.js";
 
 const router = express.Router();

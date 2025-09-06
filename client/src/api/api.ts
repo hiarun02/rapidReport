@@ -50,14 +50,6 @@ export const adminLogin = async (email: string, password: string) => {
   return api.post("/api/admin-login", {email, password});
 };
 
-// admin logout
-
-export const adminLogout = async () => {
-  return api.post("/api/admin-logout", {
-    withCredentials: true,
-  });
-};
-
 // Admin API functions
 export const getAllReports = async () => {
   return await api.get("/api/admin/reports", {

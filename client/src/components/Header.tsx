@@ -1,7 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import {useAdminStore} from "@/store/useAdminStore";
-import {LogOut} from "lucide-react";
+import {LayoutDashboardIcon, LogOut} from "lucide-react";
 import {toast} from "sonner";
 import {Button} from "./ui/button";
 
@@ -48,18 +48,11 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // logoin
-
-  const handleLogin = async () => {
-    try {
-      clearAdmin();
-      toast.success("Logged out successfully");
-      navigate("/admin/login");
-    } catch (error) {
-      toast.error(`${error}, "Logout failed!"`);
-      clearAdmin();
-      navigate("/admin/login");
-    }
+  // logout
+  const handleLogout = () => {
+    clearAdmin();
+    toast.success("Logged out successfully");
+    navigate("/admin/login");
   };
 
   if (admin) {
@@ -84,9 +77,17 @@ const Header = () => {
             </div>
             {/* left section  */}
             {admin ? (
-              <Button onClick={handleLogin}>
-                <LogOut />
-              </Button>
+              <div>
+                {" "}
+                <Button>
+                  <Link to="/admin/dashboard">
+                    <LayoutDashboardIcon />
+                  </Link>
+                </Button>
+                <Button onClick={handleLogout}>
+                  <LogOut />
+                </Button>
+              </div>
             ) : (
               "please log in"
             )}
