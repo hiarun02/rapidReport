@@ -1,5 +1,10 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
+import {useAdminStore} from "@/store/useAdminStore";
+import {LogOut} from "lucide-react";
+import {adminLogout} from "@/api/api";
+import {toast} from "sonner";
+import {Button} from "./ui/button";
 
 const navItems = [
   {
@@ -27,6 +32,8 @@ const navItems = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const {admin, clearAdmin} = useAdminStore();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -41,6 +48,54 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // logout
+
+  const handleLogout = async () => {
+    try {
+      clearAdmin();
+      toast.success("Logged out successfully");
+      navigate("/admin/login");
+    } catch (error: any) {
+      toast.error(error, "Logout failed!");
+      clearAdmin();
+      navigate("/admin/login");
+    }
+  };
+
+  if (admin) {
+    return (
+      <header
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-lg"
+            : "bg-white/95 backdrop-blur-sm border-b border-transparent shadow-sm"
+        }`}
+      >
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link
+                to="/"
+                className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-200"
+              >
+                Rapid<span className="text-red-500">Report</span>
+              </Link>
+            </div>
+            {/* left section  */}
+            {admin ? (
+              <Button onClick={handleLogout}>
+                <LogOut />
+              </Button>
+            ) : (
+              "please log in"
+            )}
+          </div>
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <header
@@ -76,7 +131,6 @@ const Header = () => {
             ))}
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
@@ -116,6 +170,8 @@ const Header = () => {
               </svg>
             </button>
           </div>
+
+          {/* Mobile menu button */}
         </div>
 
         {/* Mobile Navigation Menu */}
@@ -133,16 +189,17 @@ const Header = () => {
                 : "bg-white border-gray-200"
             }`}
           >
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-3 py-2 text-gray-700 hover:text-red-500 hover:bg-gray-50 font-medium rounded-md transition-colors duration-200"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {!admin &&
+              navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 text-gray-700 hover:text-red-500 hover:bg-gray-50 font-medium rounded-md transition-colors duration-200"
+                >
+                  {item.name}
+                </Link>
+              ))}
           </div>
         </div>
       </nav>
