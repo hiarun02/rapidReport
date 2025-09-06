@@ -2,7 +2,6 @@ import {Link, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import {useAdminStore} from "@/store/useAdminStore";
 import {LogOut} from "lucide-react";
-import {adminLogout} from "@/api/api";
 import {toast} from "sonner";
 import {Button} from "./ui/button";
 
@@ -49,15 +48,15 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // logout
+  // logoin
 
-  const handleLogout = async () => {
+  const handleLogin = async () => {
     try {
       clearAdmin();
       toast.success("Logged out successfully");
       navigate("/admin/login");
-    } catch (error: any) {
-      toast.error(error, "Logout failed!");
+    } catch (error) {
+      toast.error(`${error}, "Logout failed!"`);
       clearAdmin();
       navigate("/admin/login");
     }
@@ -85,7 +84,7 @@ const Header = () => {
             </div>
             {/* left section  */}
             {admin ? (
-              <Button onClick={handleLogout}>
+              <Button onClick={handleLogin}>
                 <LogOut />
               </Button>
             ) : (
