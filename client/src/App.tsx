@@ -15,7 +15,6 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     errorElement: <NotFound />,
-
     children: [
       {
         path: "/",
@@ -37,7 +36,6 @@ const router = createBrowserRouter([
         path: "/how-it-works",
         element: <HowItWorks />,
       },
-
       // admin
       {
         path: "/admin/login",

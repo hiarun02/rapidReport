@@ -45,38 +45,3 @@ export const adminLogin = async (req, res) => {
     });
   }
 };
-
-// logout
-
-export const adminLogout = async (req, res) => {
-  try {
-    if (!req.session.adminId) {
-      return res.status(400).json({
-        message: "You are not logged in.",
-        success: false,
-      });
-    }
-
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Error destroying session:", err);
-        return res.status(500).json({
-          message: "Logout failed.",
-          success: false,
-        });
-      }
-
-      res.clearCookie("connect.sid"); // ✅ Remove session cookie
-      return res.status(200).json({
-        message: "Admin logged out successfully ✅",
-        success: true,
-      });
-    });
-  } catch (error) {
-    console.error("Error during admin logout:", error);
-    return res.status(500).json({
-      message: "Internal Server Error",
-      success: false,
-    });
-  }
-};

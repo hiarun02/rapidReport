@@ -1,6 +1,9 @@
+import {adminLogin} from "@/api/api";
+
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
+import {useAdminStore} from "@/store/useAdminStore";
 import {LogInIcon, EyeIcon, EyeOffIcon, ShieldCheckIcon} from "lucide-react";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -17,6 +20,7 @@ const Login = () => {
     password: "",
   });
 
+  const {setAdmin} = useAdminStore();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,20 +29,24 @@ const Login = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setIsLoading(true);
-
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // temp logic
-      if (form.email === "admin@gmail.com" && form.password === "admin123") {
+      const {email, password} = form;
+      const response = await adminLogin(email, password);
+      if (response.status === 200 || response.data.status === 200) {
         navigate("/admin/dashboard");
-        toast("Logged in Successfully...");
+        const {admin} = response.data;
+        setAdmin(admin);
+        toast.success(response.data.message || "Logged in successfully 🎉");
       } else {
-        toast("Invalid email or password. Please try again.");
+        toast.error(response?.data?.message || "Invalid credentials!");
       }
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong. Please try again!";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
