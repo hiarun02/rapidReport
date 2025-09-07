@@ -55,6 +55,8 @@ const Header = () => {
     navigate("/admin/login");
   };
 
+  const isDashboard = window.location.pathname === "/admin/dashboard";
+
   if (admin) {
     return (
       <header
@@ -77,14 +79,25 @@ const Header = () => {
             </div>
             {/* left section  */}
             {admin ? (
-              <div>
-                {" "}
-                <Button>
-                  <Link to="/admin/dashboard">
-                    <LayoutDashboardIcon />
-                  </Link>
-                </Button>
-                <Button onClick={handleLogout}>
+              <div className="flex items-center gap-3">
+                {isDashboard ? null : (
+                  <Button
+                    variant="outline"
+                    className="border border-gray-300 hover:bg-gray-100"
+                  >
+                    <Link to="/admin/dashboard">
+                      <span className="flex justify-center items-center gap-2">
+                        <LayoutDashboardIcon />
+                      </span>
+                    </Link>
+                  </Button>
+                )}
+
+                <Button
+                  variant="outline"
+                  onClick={handleLogout}
+                  className="border border-gray-300 hover:bg-gray-100"
+                >
                   <LogOut />
                 </Button>
               </div>
