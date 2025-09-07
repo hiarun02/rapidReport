@@ -87,7 +87,7 @@ const Login = () => {
                 onChange={(e) =>
                   setForm((prev) => ({...prev, email: e.target.value}))
                 }
-                placeholder="admin@gmail.com"
+                placeholder="Enter your email"
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors`}
                 disabled={isLoading}
               />
@@ -109,7 +109,7 @@ const Login = () => {
                   onChange={(e) =>
                     setForm((prev) => ({...prev, password: e.target.value}))
                   }
-                  placeholder="admin123"
+                  placeholder="Enter Your Password"
                   className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors `}
                   disabled={isLoading}
                 />
