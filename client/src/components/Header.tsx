@@ -1,7 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import {useAdminStore} from "@/store/useAdminStore";
-import {LayoutDashboardIcon, LogOut} from "lucide-react";
+import {LogOut} from "lucide-react";
 import {toast} from "sonner";
 import {Button} from "./ui/button";
 
@@ -56,6 +56,7 @@ const Header = () => {
   };
 
   const isDashboard = window.location.pathname === "/admin/dashboard";
+  const isHomePage = window.location.pathname === "/";
 
   if (admin) {
     return (
@@ -87,19 +88,20 @@ const Header = () => {
                   >
                     <Link to="/admin/dashboard">
                       <span className="flex justify-center items-center gap-2">
-                        <LayoutDashboardIcon />
+                        Dashboard
                       </span>
                     </Link>
                   </Button>
                 )}
-
-                <Button
-                  variant="outline"
-                  onClick={handleLogout}
-                  className="border border-gray-300 hover:bg-gray-100"
-                >
-                  <LogOut />
-                </Button>
+                {isHomePage ? null : (
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    className="border border-gray-300 hover:bg-gray-100"
+                  >
+                    <LogOut />
+                  </Button>
+                )}
               </div>
             ) : (
               "please log in"

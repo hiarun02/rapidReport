@@ -8,6 +8,7 @@ import {
 } from "../../../api/api";
 import {toast} from "sonner";
 import {AxiosError} from "axios";
+import ReportStats from "./ReportStats";
 
 interface Report {
   _id: string;
@@ -29,7 +30,7 @@ const Dashboard = () => {
   const [filteredReports, setFilteredReports] = useState<Report[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [reportTypeFilter, setReportTypeFilter] = useState("all");
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -54,52 +55,6 @@ const Dashboard = () => {
         } else {
           toast.error("An unexpected error occurred");
         }
-        // Fallback to mock data for development
-        const mockReports: Report[] = [
-          {
-            _id: "1",
-            reportId: "RPT-20241201-ABC123",
-            reportType: "emergency",
-            incidentType: "assault",
-            title: "Assault in Downtown Area",
-            description:
-              "Witnessed an assault near the main street intersection",
-            location: "Main St & 5th Ave",
-            status: "pending",
-            priority: "critical",
-            createdAt: "2024-12-01T10:30:00Z",
-            updatedAt: "2024-12-01T10:30:00Z",
-          },
-          {
-            _id: "2",
-            reportId: "RPT-20241201-DEF456",
-            reportType: "non-emergency",
-            incidentType: "vandalism",
-            title: "Graffiti on Public Property",
-            description:
-              "Large graffiti found on the side of city hall building",
-            location: "City Hall, 123 Government St",
-            status: "in-progress",
-            priority: "medium",
-            createdAt: "2024-12-01T09:15:00Z",
-            updatedAt: "2024-12-01T11:00:00Z",
-          },
-          {
-            _id: "3",
-            reportId: "RPT-20241201-GHI789",
-            reportType: "emergency",
-            incidentType: "safety-hazard",
-            title: "Gas Leak Reported",
-            description: "Strong gas smell detected in residential area",
-            location: "Oak Street Residential Complex",
-            status: "resolved",
-            priority: "high",
-            createdAt: "2024-12-01T08:45:00Z",
-            updatedAt: "2024-12-01T12:30:00Z",
-          },
-        ];
-        setReports(mockReports);
-        setFilteredReports(mockReports);
       } finally {
         setIsLoading(false);
       }
@@ -125,14 +80,14 @@ const Dashboard = () => {
       filtered = filtered.filter((report) => report.status === statusFilter);
     }
 
-    if (priorityFilter !== "all") {
+    if (reportTypeFilter !== "all") {
       filtered = filtered.filter(
-        (report) => report.priority === priorityFilter
+        (report) => report.reportType === reportTypeFilter
       );
     }
 
     setFilteredReports(filtered);
-  }, [reports, searchTerm, statusFilter, priorityFilter]);
+  }, [reports, searchTerm, statusFilter, reportTypeFilter]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -197,14 +152,6 @@ const Dashboard = () => {
     }
   };
 
-  const stats = {
-    total: reports.length,
-    pending: reports.filter((r) => r.status === "pending").length,
-    inProgress: reports.filter((r) => r.status === "in-progress").length,
-    resolved: reports.filter((r) => r.status === "resolved").length,
-    emergency: reports.filter((r) => r.reportType === "emergency").length,
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -220,139 +167,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">
-                  Total Reports
-                </p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.total}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-yellow-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Pending</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.pending}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">In Progress</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.inProgress}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Resolved</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.resolved}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-            <div className="flex items-center">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-red-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
-                  />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Emergency</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats.emergency}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ReportStats reports={reports} />
 
         {/* Filters and Search */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-200">
@@ -385,20 +200,19 @@ const Dashboard = () => {
                 <option value="closed">Closed</option>
               </select>
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Priority Filter
+                Report Type Filter
               </label>
               <select
-                value={priorityFilter}
-                onChange={(e) => setPriorityFilter(e.target.value)}
+                value={reportTypeFilter}
+                onChange={(e) => setReportTypeFilter(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               >
-                <option value="all">All Priority</option>
-                <option value="critical">Critical</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
+                <option value="all">All Types</option>
+                <option value="emergency">Emergency</option>
+                <option value="non-emergency">Non-Emergency</option>
               </select>
             </div>
             <div className="flex items-end">
@@ -406,10 +220,10 @@ const Dashboard = () => {
                 onClick={() => {
                   setSearchTerm("");
                   setStatusFilter("all");
-                  setPriorityFilter("all");
+                  setReportTypeFilter("all");
                 }}
                 variant="outline"
-                className="w-full"
+                className="w-full bg-red-600 text-white shadow hover:bg-red-700"
               >
                 Clear Filters
               </Button>
@@ -471,9 +285,6 @@ const Dashboard = () => {
                           className={getReportTypeColor(report.reportType)}
                         >
                           {report.reportType}
-                        </Badge>
-                        <Badge className={getPriorityColor(report.priority)}>
-                          {report.priority}
                         </Badge>
                       </div>
                     </td>
