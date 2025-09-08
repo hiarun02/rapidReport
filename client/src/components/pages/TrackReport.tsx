@@ -29,7 +29,8 @@ const TrackReport = () => {
   const handleFindReport = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!reportId.trim()) { // 
+    if (!reportId.trim()) {
+      //
       toast.error("Please enter a report ID");
       return;
     }
@@ -473,29 +474,21 @@ const TrackReport = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                  <Button
-                    className="flex-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"
-                    onClick={() => {
-                      setReportData(null);
-                      setReportId("");
-                      setHasSearched(false);
-                    }}
-                    variant="outline"
-                  >
-                    Search Another Report
-                  </Button>
-                  <Button
-                    onClick={() => window.print()}
-                    className="flex-1 bg-red-500 hover:bg-red-700 text-white cursor-pointer"
-                  >
-                    Print Report Details
-                  </Button>
-                </div>
               </div>
             ) : null}
+            <div className="flex justify-center items-center w-full py-5">
+              <Button
+                className="w-[90%] bg-red-500 hover:bg-red-700 text-white cursor-pointer"
+                onClick={() => {
+                  setReportData(null);
+                  setReportId("");
+                  setHasSearched(false);
+                }}
+                variant="outline"
+              >
+                Search Another Report
+              </Button>
+            </div>
           </div>
         )}
       </div>
