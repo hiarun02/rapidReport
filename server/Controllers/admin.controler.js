@@ -156,37 +156,3 @@ export const getReportById = async (req, res) => {
     });
   }
 };
-
-// Delete report
-export const deleteReport = async (req, res) => {
-  try {
-    const {reportId} = req.params;
-
-    if (!reportId) {
-      return res.status(400).json({
-        message: "Report ID is required.",
-        success: false,
-      });
-    }
-
-    const report = await Report.findByIdAndDelete(reportId);
-
-    if (!report) {
-      return res.status(404).json({
-        message: "Report not found.",
-        success: false,
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Report deleted successfully",
-    });
-  } catch (error) {
-    console.error("Error deleting report:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to delete report",
-    });
-  }
-};

@@ -36,6 +36,7 @@ const SubmitForm = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedReportId, setSubmittedReportId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     reportId: "",
     reportType: "",
@@ -87,8 +88,8 @@ const SubmitForm = () => {
     try {
       await navigator.clipboard.writeText(text);
       toast.success("Report ID copied to clipboard!");
-    } catch (error) {
-      toast.error("Failed to copy to clipboard");
+    } catch (error: any) {
+      toast.error("Failed to copy to clipboard", error);
     }
   };
 
@@ -112,6 +113,7 @@ const SubmitForm = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       const response = await submitForm(formData);
       toast.success(response.data.message);
@@ -124,6 +126,8 @@ const SubmitForm = () => {
         toast.error("An unexpected error occurred!");
       }
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -451,7 +455,7 @@ const SubmitForm = () => {
             type="submit"
             className="w-full bg-red-500 text-white hover:bg-red-600"
           >
-            Submit Report
+            {isLoading ? "Submiting..." : "Submit Report"}
           </Button>
         </div>
       </form>

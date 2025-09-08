@@ -4,7 +4,6 @@ import {
   adminLogin,
   updateReportStatus,
   getReportById,
-  deleteReport,
 } from "../Controllers/admin.controler.js";
 import {verifyAdmin} from "../Middlewares/adminMiddleweare.js";
 
@@ -14,7 +13,6 @@ router.post("/admin-login", adminLogin);
 router.get("/admin/reports", adminGetAllReport);
 router.patch("/admin/reports/:reportId/status", updateReportStatus);
 router.get("/admin/reports/:reportId", getReportById);
-router.delete("/admin/reports/:reportId", deleteReport);
 
 router.get("/admin/dashboard", verifyAdmin, (req, res) => {
   res.status(200).json({

@@ -70,9 +70,3 @@ export const getReportById = async (reportId: string) => {
     withCredentials: true,
   });
 };
-
-export const deleteReport = async (reportId: string) => {
-  return await api.delete(`/api/admin/reports/${reportId}`, {
-    withCredentials: true,
-  });
-};
