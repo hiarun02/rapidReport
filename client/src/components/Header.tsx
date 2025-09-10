@@ -18,10 +18,10 @@ const navItems = [
     name: "Track Report",
     path: "/track-report",
   },
-  // {
-  //   name: "Nearby Support",
-  //   path: "/near-by-support",
-  // },
+  {
+    name: "Nearby Support",
+    path: "/near-by-support",
+  },
   {
     name: "How it works",
     path: "/how-it-works",

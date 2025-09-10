@@ -382,14 +382,12 @@ const SubmitForm = () => {
             </SelectTrigger>
             <SelectContent className="border border-red-200 shadow-sm bg-white">
               <SelectItem value="theft">Theft</SelectItem>
-              <SelectItem value="vandalism">Vandalism</SelectItem>
               <SelectItem value="assault">Assault</SelectItem>
-              <SelectItem value="safety-hazard">Safety Hazard</SelectItem>
+              <SelectItem value="safety-hazard">Medical Emergency</SelectItem>
               <SelectItem value="infrastructure">Infrastructure</SelectItem>
               <SelectItem value="environmental">Environmental</SelectItem>
               <SelectItem value="property">Property</SelectItem>
-              <SelectItem value="traffic">Traffic</SelectItem>
-              <SelectItem value="noise">Noise</SelectItem>
+              <SelectItem value="traffic">Violence</SelectItem>
               <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
