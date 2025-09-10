@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import {Label} from "@/components/ui/label";
 
-interface Report {
+interface DashboardReport {
   _id: string;
   reportId: string;
   reportType: "emergency" | "non-emergency";
@@ -33,16 +33,38 @@ interface Report {
   updatedAt: string;
 }
 
+// Type for ReportStats component compatibility
+interface StatsReport {
+  id: string;
+  status: "pending" | "in-progress" | "resolved";
+  reportType: "emergency" | "normal" | string;
+}
+
 const Dashboard = () => {
-  const [reports, setReports] = useState<Report[]>([]);
-  const [filteredReports, setFilteredReports] = useState<Report[]>([]);
+  const [reports, setReports] = useState<DashboardReport[]>([]);
+  const [filteredReports, setFilteredReports] = useState<DashboardReport[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [reportTypeFilter, setReportTypeFilter] = useState("all");
-  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [selectedReport, setSelectedReport] = useState<DashboardReport | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(reportTypeFilter);
+  // Convert dashboard reports to stats format
+  const convertToStatsFormat = (
+    dashboardReports: DashboardReport[]
+  ): StatsReport[] => {
+    return dashboardReports.map((report) => ({
+      id: report._id,
+      status:
+        report.status === "closed"
+          ? "resolved"
+          : (report.status as "pending" | "in-progress" | "resolved"),
+      reportType:
+        report.reportType === "non-emergency" ? "normal" : report.reportType,
+    }));
+  };
 
   // Fetch reports from API
   useEffect(() => {
@@ -143,7 +165,7 @@ const Dashboard = () => {
           report._id === reportId
             ? {
                 ...report,
-                status: newStatus as Report["status"],
+                status: newStatus as DashboardReport["status"],
                 updatedAt: new Date().toISOString(),
               }
             : report
@@ -177,7 +199,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Cards */}
-        <ReportStats reports={reports} />
+        <ReportStats reports={convertToStatsFormat(reports)} />
 
         {/* Filters and Search */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-200">
@@ -231,7 +253,7 @@ const Dashboard = () => {
                 <SelectContent className="border border-red-200 shadow-sm bg-white">
                   <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="emergency">Emergency</SelectItem>
-                  <SelectItem value="non-Emergency">Non-Emergency</SelectItem>
+                  <SelectItem value="non-emergency">Non-Emergency</SelectItem>
                 </SelectContent>
               </Select>
             </div>
