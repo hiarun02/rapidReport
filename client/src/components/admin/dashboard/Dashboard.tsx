@@ -9,6 +9,14 @@ import {
 import {toast} from "sonner";
 import {AxiosError} from "axios";
 import ReportStats from "./ReportStats";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {Label} from "@/components/ui/label";
 
 interface Report {
   _id: string;
@@ -33,6 +41,8 @@ const Dashboard = () => {
   const [reportTypeFilter, setReportTypeFilter] = useState("all");
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  console.log(reportTypeFilter);
 
   // Fetch reports from API
   useEffect(() => {
@@ -173,9 +183,9 @@ const Dashboard = () => {
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 Search Reports
-              </label>
+              </Label>
               <Input
                 type="text"
                 placeholder="Search by ID, title, or location..."
@@ -185,35 +195,45 @@ const Dashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 Status Filter
-              </label>
-              <select
+              </Label>
+              <Select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                onValueChange={(value) => setStatusFilter(value)}
               >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="in-progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
-              </select>
+                <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="border border-red-200 shadow-sm bg-white">
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="resolved">Resolved</SelectItem>
+                  <SelectItem value="closed">Closed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label htmlFor="incident-type" className="block mb-3">
                 Report Type Filter
-              </label>
-              <select
+              </Label>
+
+              <Select
                 value={reportTypeFilter}
-                onChange={(e) => setReportTypeFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                onValueChange={(value) => setReportTypeFilter(value)}
+                defaultValue="all"
               >
-                <option value="all">All Types</option>
-                <option value="emergency">Emergency</option>
-                <option value="non-emergency">Non-Emergency</option>
-              </select>
+                <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent className="border border-red-200 shadow-sm bg-white">
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="emergency">Emergency</SelectItem>
+                  <SelectItem value="non-Emergency">Non-Emergency</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-end">
               <Button
@@ -223,7 +243,7 @@ const Dashboard = () => {
                   setReportTypeFilter("all");
                 }}
                 variant="outline"
-                className="w-full bg-red-600 text-white shadow hover:bg-red-700"
+                className="w-full bg-red-600 text-white shadow hover:bg-red-700 rounded-md"
               >
                 Clear Filters
               </Button>

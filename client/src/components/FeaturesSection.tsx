@@ -35,9 +35,9 @@ const FeaturesSection = () => {
       color: "from-orange-500 to-orange-600",
     },
     {
-      icon: "🌍",
-      title: "Community Impact",
-      description: "Join thousands making their communities safer every day",
+      icon: "♻️",
+      title: "Incident Categorization",
+      description: "Quickly classify reports as emergency or non-emergency.",
       color: "from-teal-500 to-teal-600",
     },
   ];
