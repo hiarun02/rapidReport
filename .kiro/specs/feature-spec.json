@@ -1,23 +1,152 @@
 {
-    "name": "Incident Reporting UI Spec",
-    "description": "Spec for the React + TypeScript frontend of the ReportNow app",
-    "version": "1.0.0",
-    "components": [
+  "name": "Rapid Report UI Spec",
+  "description": "Spec for the React + TypeScript frontend of Rapid Report",
+  "version": "1.1.0",
+  "components": [
+    {
+      "name": "ReportForm",
+      "type": "form",
+      "props": {
+        "title": "string",
+        "description": "string",
+        "location": "string",
+        "image": "File | null"
+      }
+    },
+    {
+      "name": "ReportList",
+      "type": "display",
+      "props": {
+        "reports": "Report[]"
+      }
+    },
+    {
+      "name": "ReportCard",
+      "type": "display",
+      "props": {
+        "id": "string",
+        "title": "string",
+        "location": "string",
+        "status": "\"pending\" | \"resolved\"",
+        "createdAt": "Date"
+      }
+    },
+    {
+      "name": "ReportTracker",
+      "type": "utility",
+      "props": {
+        "trackingId": "string"
+      }
+    },
+    {
+      "name": "Navbar",
+      "type": "layout",
+      "props": {
+        "links": "Array<{ label: string, href: string }>"
+      }
+    },
+    {
+      "name": "Footer",
+      "type": "layout",
+      "props": {
+        "text": "string"
+      }
+    },
+    {
+      "name": "AdminDashboard",
+      "type": "admin",
+      "props": {
+        "reports": "Report[]",
+        "stats": "{ totalReports: number, pending: number, resolved: number }",
+        "onUpdateStatus": "(id: string, status: string) => void"
+      }
+    },
+    {
+      "name": "AdminReportTable",
+      "type": "admin",
+      "props": {
+        "reports": "Report[]",
+        "onSelectReport": "(id: string) => void"
+      }
+    }
+  ],
+  "store": {
+    "slices": [
       {
-        "name": "ReportForm",
-        "props": {
-          "title": "string",
-          "description": "string",
-          "location": "string",
-          "image": "File | null"
-        }
+        "name": "reportSlice",
+        "state": {
+          "reports": "Report[]",
+          "loading": "boolean",
+          "error": "string | null"
+        },
+        "actions": [
+          "addReport",
+          "fetchReports",
+          "updateReportStatus"
+        ]
       },
       {
-        "name": "ReportTracker",
-        "props": {
-          "trackingId": "string"
-        }
+        "name": "adminSlice",
+        "state": {
+          "allReports": "Report[]",
+          "stats": "{ totalReports: number, pending: number, resolved: number }",
+          "loading": "boolean",
+          "error": "string | null"
+        },
+        "actions": [
+          "fetchAllReports",
+          "calculateStats",
+          "setReportStatus"
+        ]
       }
     ]
-  }
-  
+  },
+  "api": {
+    "endpoints": [
+      {
+        "path": "/api/report",
+        "method": "POST",
+        "description": "Create a new report"
+      },
+      {
+        "path": "/api/reports",
+        "method": "GET",
+        "description": "Fetch all reports"
+      },
+      {
+        "path": "/api/report/:id",
+        "method": "GET",
+        "description": "Fetch report by ID"
+      },
+      {
+        "path": "/api/report/:id",
+        "method": "PATCH",
+        "description": "Update report status"
+      },
+      {
+        "path": "/api/admin/reports",
+        "method": "GET",
+        "description": "Fetch all reports for admin"
+      },
+      {
+        "path": "/api/admin/stats",
+        "method": "GET",
+        "description": "Fetch report statistics for dashboard"
+      }
+    ]
+  },
+  "routes": [
+    {
+      "path": "/",
+      "component": "ReportForm"
+    },
+    {
+      "path": "/tracker/:trackingId",
+      "component": "ReportTracker"
+    },
+    {
+      "path": "/admin/dashboard",
+      "component": "AdminDashboard"
+    }
+  ]
+}
