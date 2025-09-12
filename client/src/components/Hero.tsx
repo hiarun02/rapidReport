@@ -5,7 +5,6 @@ const stats = [
   {number: "100+", label: "Reports Submitted", icon: "📝"},
   {number: "98%", label: "Response Rate", icon: "✅"},
   {number: "24/7", label: "Available Support", icon: "🕐"},
-  {number: "500+", label: "Partner Agencies", icon: "🤝"},
 ];
 
 const Hero = () => {
@@ -13,7 +12,7 @@ const Hero = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentStat((prev) => (prev + 1) % stats.length);
-    }, 3000);
+    }, 2000);
     return () => clearInterval(interval);
   }, [stats.length]);
 
