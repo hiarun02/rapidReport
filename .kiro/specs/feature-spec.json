@@ -1,72 +1,177 @@
 {
-  "name": "Rapid Report UI Spec",
-  "description": "Spec for the React + TypeScript frontend of Rapid Report",
-  "version": "1.1.0",
+  "name": "Community Safety Report System UI Spec",
+  "description": "Complete React + TypeScript frontend specification for the Community Safety Report System",
+  "version": "2.0.0",
+  "types": {
+    "Report": {
+      "id": "string",
+      "title": "string",
+      "description": "string",
+      "location": "string",
+      "image": "string | null",
+      "status": "\"pending\" | \"resolved\"",
+      "createdAt": "Date",
+      "updatedAt": "Date"
+    },
+    "AdminStats": {
+      "totalReports": "number",
+      "pending": "number",
+      "resolved": "number"
+    },
+    "SupportService": {
+      "id": "string",
+      "name": "string",
+      "type": "\"emergency\" | \"medical\" | \"mental-health\" | \"community\" | \"legal\" | \"shelter\"",
+      "phone": "string",
+      "address": "string",
+      "hours": "string",
+      "isOpen": "boolean",
+      "website": "string | null"
+    }
+  },
   "components": [
     {
       "name": "ReportForm",
       "type": "form",
+      "description": "Main form for submitting incident reports",
       "props": {
-        "title": "string",
-        "description": "string",
-        "location": "string",
-        "image": "File | null"
-      }
+        "onSubmit": "(report: Omit<Report, 'id' | 'createdAt' | 'updatedAt' | 'status'>) => void",
+        "loading": "boolean",
+        "error": "string | null"
+      },
+      "features": ["location detection", "image upload", "form validation"]
     },
     {
-      "name": "ReportList",
-      "type": "display",
+      "name": "ReportTracker",
+      "type": "utility",
+      "description": "Component for tracking report status by ID",
       "props": {
-        "reports": "Report[]"
+        "onTrack": "(trackingId: string) => void",
+        "report": "Report | null",
+        "loading": "boolean",
+        "error": "string | null"
       }
     },
     {
       "name": "ReportCard",
       "type": "display",
+      "description": "Display card for individual report information",
       "props": {
-        "id": "string",
-        "title": "string",
-        "location": "string",
-        "status": "\"pending\" | \"resolved\"",
-        "createdAt": "Date"
-      }
-    },
-    {
-      "name": "ReportTracker",
-      "type": "utility",
-      "props": {
-        "trackingId": "string"
-      }
-    },
-    {
-      "name": "Navbar",
-      "type": "layout",
-      "props": {
-        "links": "Array<{ label: string, href: string }>"
-      }
-    },
-    {
-      "name": "Footer",
-      "type": "layout",
-      "props": {
-        "text": "string"
+        "report": "Report",
+        "showActions": "boolean",
+        "onStatusChange": "(id: string, status: \"pending\" | \"resolved\") => void"
       }
     },
     {
       "name": "AdminDashboard",
       "type": "admin",
+      "description": "Main administrative dashboard with stats and report management",
       "props": {
+        "stats": "AdminStats",
         "reports": "Report[]",
-        "stats": "{ totalReports: number, pending: number, resolved: number }",
-        "onUpdateStatus": "(id: string, status: string) => void"
+        "loading": "boolean",
+        "error": "string | null",
+        "onUpdateStatus": "(id: string, status: \"pending\" | \"resolved\") => void",
+        "onViewReport": "(id: string) => void"
       }
     },
     {
       "name": "AdminReportTable",
       "type": "admin",
+      "description": "Table component for displaying and managing reports",
       "props": {
         "reports": "Report[]",
-        "onSelectReport": "(id: string) => void"
+        "onSelectReport": "(id: string) => void",
+        "onStatusChange": "(id: string, status: \"pending\" | \"resolved\") => void",
+        "filters": "{ status?: \"pending\" | \"resolved\" | \"all\" }",
+        "onFilterChange": "(filters: any) => void"
+      }
+    },
+    {
+      "name": "ReportStats",
+      "type": "display",
+      "description": "Statistics display component for dashboard",
+      "props": {
+        "stats": "AdminStats",
+        "loading": "boolean"
+      }
+    },
+    {
+      "name": "NearbySupport",
+      "type": "page",
+      "description": "Emergency support services directory page",
+      "props": {
+        "services": "SupportService[]",
+        "loading": "boolean",
+        "onSearch": "(query: string) => void",
+        "onFilter": "(type: string) => void",
+        "onCall": "(phone: string) => void",
+        "onDirections": "(address: string) => void"
+      }
+    },
+    {
+      "name": "EmergencyButtons",
+      "type": "utility",
+      "description": "Quick access emergency contact buttons",
+      "props": {
+        "onEmergencyCall": "(number: string) => void"
+      }
+    },
+    {
+      "name": "Hero",
+      "type": "layout",
+      "description": "Hero section for homepage",
+      "props": {
+        "title": "string",
+        "subtitle": "string",
+        "ctaText": "string",
+        "onCtaClick": "() => void"
+      }
+    },
+    {
+      "name": "Navbar",
+      "type": "layout",
+      "description": "Main navigation component",
+      "props": {
+        "links": "Array<{ label: string, href: string, isActive?: boolean }>",
+        "isAdmin": "boolean"
+      }
+    },
+    {
+      "name": "Footer",
+      "type": "layout",
+      "description": "Site footer component",
+      "props": {
+        "text": "string",
+        "links": "Array<{ label: string, href: string }>"
+      }
+    },
+    {
+      "name": "LoadingSpinner",
+      "type": "utility",
+      "description": "Reusable loading indicator",
+      "props": {
+        "size": "\"sm\" | \"md\" | \"lg\"",
+        "text": "string"
+      }
+    },
+    {
+      "name": "ErrorBoundary",
+      "type": "utility",
+      "description": "Error boundary wrapper component",
+      "props": {
+        "children": "React.ReactNode",
+        "fallback": "React.ComponentType<{ error: Error }>"
+      }
+    },
+    {
+      "name": "AdminLogin",
+      "type": "admin",
+      "description": "Admin authentication form",
+      "props": {
+        "onLogin": "(credentials: { username: string, password: string }) => void",
+        "loading": "boolean",
+        "error": "string | null"
       }
     }
   ],
@@ -74,64 +179,127 @@
     "slices": [
       {
         "name": "reportSlice",
+        "description": "Handles user-facing report operations",
         "state": {
-          "reports": "Report[]",
+          "currentReport": "Report | null",
+          "trackingResult": "Report | null",
           "loading": "boolean",
-          "error": "string | null"
+          "error": "string | null",
+          "submissionSuccess": "boolean"
         },
         "actions": [
-          "addReport",
-          "fetchReports",
-          "updateReportStatus"
+          "submitReport",
+          "trackReport",
+          "clearTrackingResult",
+          "clearSubmissionState",
+          "setLoading",
+          "setError"
         ]
       },
       {
         "name": "adminSlice",
+        "description": "Handles administrative operations and data",
         "state": {
-          "allReports": "Report[]",
-          "stats": "{ totalReports: number, pending: number, resolved: number }",
+          "reports": "Report[]",
+          "stats": "AdminStats",
+          "selectedReport": "Report | null",
+          "filters": "{ status?: \"pending\" | \"resolved\" | \"all\", search?: string }",
+          "loading": "boolean",
+          "error": "string | null",
+          "isAuthenticated": "boolean"
+        },
+        "actions": [
+          "fetchAllReports",
+          "fetchStats",
+          "updateReportStatus",
+          "setSelectedReport",
+          "setFilters",
+          "login",
+          "logout",
+          "setLoading",
+          "setError"
+        ]
+      },
+      {
+        "name": "supportSlice",
+        "description": "Manages emergency support services data",
+        "state": {
+          "services": "SupportService[]",
+          "filteredServices": "SupportService[]",
+          "searchQuery": "string",
+          "selectedType": "string | null",
           "loading": "boolean",
           "error": "string | null"
         },
         "actions": [
-          "fetchAllReports",
-          "calculateStats",
-          "setReportStatus"
+          "fetchServices",
+          "searchServices",
+          "filterByType",
+          "clearFilters",
+          "setLoading",
+          "setError"
         ]
       }
     ]
   },
   "api": {
+    "baseUrl": "/api",
     "endpoints": [
       {
         "path": "/api/report",
         "method": "POST",
-        "description": "Create a new report"
-      },
-      {
-        "path": "/api/reports",
-        "method": "GET",
-        "description": "Fetch all reports"
+        "description": "Create a new report",
+        "body": "{ title: string, description: string, location: string, image?: File }",
+        "response": "{ success: boolean, data: { id: string, trackingId: string }, message?: string }"
       },
       {
         "path": "/api/report/:id",
         "method": "GET",
-        "description": "Fetch report by ID"
+        "description": "Fetch report by tracking ID",
+        "params": "{ id: string }",
+        "response": "{ success: boolean, data: Report, message?: string }"
       },
       {
         "path": "/api/report/:id",
         "method": "PATCH",
-        "description": "Update report status"
+        "description": "Update report status (admin only)",
+        "params": "{ id: string }",
+        "body": "{ status: \"pending\" | \"resolved\" }",
+        "response": "{ success: boolean, data: Report, message?: string }"
       },
       {
         "path": "/api/admin/reports",
         "method": "GET",
-        "description": "Fetch all reports for admin"
+        "description": "Fetch all reports for admin dashboard",
+        "query": "{ status?: \"pending\" | \"resolved\", search?: string }",
+        "response": "{ success: boolean, data: Report[], message?: string }"
       },
       {
         "path": "/api/admin/stats",
         "method": "GET",
-        "description": "Fetch report statistics for dashboard"
+        "description": "Fetch report statistics for dashboard",
+        "response": "{ success: boolean, data: AdminStats, message?: string }"
+      },
+      {
+        "path": "/api/admin/login",
+        "method": "POST",
+        "description": "Admin authentication",
+        "body": "{ username: string, password: string }",
+        "response": "{ success: boolean, data: { token: string }, message?: string }"
+      },
+      {
+        "path": "/api/support/services",
+        "method": "GET",
+        "description": "Fetch emergency support services",
+        "query": "{ type?: string, search?: string }",
+        "response": "{ success: boolean, data: SupportService[], message?: string }"
+      },
+      {
+        "path": "/api/upload/image",
+        "method": "POST",
+        "description": "Upload report image",
+        "body": "FormData with image file",
+        "response": "{ success: boolean, data: { url: string }, message?: string }"
       }
     ]
   },
