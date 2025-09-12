@@ -253,19 +253,20 @@ Content-Type: multipart/form-data
 
 ### Home Page
 
-![Home Page](screenshots/home.png)
+<img width="1899" height="874" alt="Screenshot 2025-09-01 225853" src="https://github.com/user-attachments/assets/9d931e86-eab5-4a18-a972-763de009b88d" />
 
 ### Report Submission
 
-![Report Form](screenshots/submit-report.png)
+<img width="1901" height="872" alt="Screenshot 2025-09-10 110656" src="https://github.com/user-attachments/assets/6756cb69-e52e-401b-9c98-fa2ddac45721" />
 
 ### Admin Dashboard
 
-![Admin Dashboard](screenshots/admin-dashboard.png)
+<img width="1897" height="874" alt="Screenshot 2025-09-10 111725" src="https://github.com/user-attachments/assets/347ec4fa-f20f-4105-b8a4-f8baf4ccc5b2" />
+
 
 ### Support Services
 
-![Support Services](screenshots/nearby-support.png)
+<img width="1897" height="868" alt="Screenshot 2025-09-12 131543" src="https://github.com/user-attachments/assets/ab9afcbe-0e50-46c3-8adb-65d575695308" />
 
 ## 🔧 Configuration
 
