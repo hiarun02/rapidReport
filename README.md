@@ -25,22 +25,6 @@ A comprehensive web application for community safety reporting, incident trackin
 - **🆘 Emergency Support**: Quick access to emergency services and support resources
 - **📱 Responsive Design**: Fully responsive across all devices
 
-### 🎯 Advanced Features
-
-- **🏷️ Smart Categorization**: Emergency vs Non-Emergency report classification
-- **🔄 Real-time Updates**: Live status updates and notifications
-- **📊 Analytics Dashboard**: Report statistics and insights
-- **🔍 Advanced Filtering**: Search and filter reports by multiple criteria
-- **🗺️ Maps Integration**: Google Maps integration for directions and locations
-- **📞 Direct Communication**: One-click calling and messaging to support services
-
-### 🛡️ Safety Features
-
-- **🚨 Emergency Quick Actions**: Instant access to 911, Crisis Lifeline (988), and Crisis Text Line
-- **🏥 Support Services Directory**: Comprehensive database of local support services
-- **🔒 Secure Data Handling**: Encrypted data transmission and secure storage
-- **📋 Crisis Resources**: Mental health resources and safety tips
-
 ## 🛠️ Tech Stack
 
 ### Frontend
