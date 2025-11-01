@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {useAdminStore} from "@/store/useAdminStore";
-import {LogInIcon, EyeIcon, EyeOffIcon, ShieldCheckIcon} from "lucide-react";
+import {LogInIcon, EyeIcon, EyeOffIcon} from "lucide-react";
 import {useState} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
 import {toast} from "sonner";
@@ -57,13 +57,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen  flex justify-center items-center p-4 py-10">
+    <div className="min-h-screen flex justify-center items-center p-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-600 rounded-full mb-4">
-            <ShieldCheckIcon className="w-8 h-8 text-white" />
-          </div>
           <h1 className="text-lg font-bold text-gray-900 mb-2">
             Rapid Report Admin
           </h1>
@@ -147,13 +144,6 @@ const Login = () => {
               )}
             </Button>
           </form>
-        </div>
-
-        <div className="text-center mt-8">
-          <p className="text-sm text-gray-600">
-            Secure admin access • Rapid
-            <span className="text-red-500">Report</span> Management System
-          </p>
         </div>
       </div>
     </div>
