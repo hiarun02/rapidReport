@@ -306,15 +306,102 @@
   "routes": [
     {
       "path": "/",
-      "component": "ReportForm"
+      "component": "Home",
+      "description": "Homepage with hero section and report form",
+      "public": true
     },
     {
-      "path": "/tracker/:trackingId",
-      "component": "ReportTracker"
+      "path": "/submit",
+      "component": "SubmitReport",
+      "description": "Dedicated report submission page",
+      "public": true
+    },
+    {
+      "path": "/tracker",
+      "component": "ReportTracker",
+      "description": "Report tracking page",
+      "public": true
+    },
+    {
+      "path": "/support",
+      "component": "NearbySupport",
+      "description": "Emergency support services directory",
+      "public": true
+    },
+    {
+      "path": "/admin/login",
+      "component": "AdminLogin",
+      "description": "Admin authentication page",
+      "public": true
     },
     {
       "path": "/admin/dashboard",
-      "component": "AdminDashboard"
+      "component": "AdminDashboard",
+      "description": "Admin dashboard with reports and statistics",
+      "protected": true,
+      "role": "admin"
     }
-  ]
+  ],
+  "features": {
+    "locationDetection": {
+      "description": "GPS-based location detection with fallbacks",
+      "apis": ["Geolocation API", "IP Geolocation"],
+      "fallbacks": ["Manual entry", "Address lookup"]
+    },
+    "imageUpload": {
+      "description": "Secure image upload for report evidence",
+      "formats": ["JPEG", "PNG", "GIF"],
+      "maxSize": "10MB",
+      "storage": "Cloud storage"
+    },
+    "realTimeUpdates": {
+      "description": "Real-time status updates for reports",
+      "technology": "WebSocket or Server-Sent Events"
+    },
+    "responsiveDesign": {
+      "description": "Mobile-first responsive design",
+      "breakpoints": {
+        "mobile": "< 768px",
+        "tablet": "768px - 1024px",
+        "desktop": "> 1024px"
+      }
+    },
+    "accessibility": {
+      "description": "WCAG 2.1 AA compliance",
+      "features": ["Keyboard navigation", "Screen reader support", "High contrast", "Focus management"]
+    },
+    "security": {
+      "description": "Security measures for sensitive data",
+      "features": ["HTTPS", "Input validation", "XSS protection", "CSRF protection"]
+    }
+  },
+  "dependencies": {
+    "core": [
+      "react@^18.0.0",
+      "react-dom@^18.0.0",
+      "typescript@^5.0.0"
+    ],
+    "routing": [
+      "react-router-dom@^6.0.0"
+    ],
+    "state": [
+      "@reduxjs/toolkit@^1.9.0",
+      "react-redux@^8.0.0"
+    ],
+    "styling": [
+      "tailwindcss@^3.0.0",
+      "@tailwindcss/forms@^0.5.0"
+    ],
+    "utilities": [
+      "axios@^1.0.0",
+      "react-hook-form@^7.0.0",
+      "react-hot-toast@^2.0.0"
+    ],
+    "development": [
+      "vite@^4.0.0",
+      "@vitejs/plugin-react@^4.0.0",
+      "eslint@^8.0.0",
+      "prettier@^2.0.0"
+    ]
+  }
 }

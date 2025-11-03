@@ -213,7 +213,7 @@ const NearbySupport = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 mt-24">
+        <div className="text-center mb-12 mt-10">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Nearby Support Services
           </h1>
@@ -403,21 +403,25 @@ const NearbySupport = () => {
               </div>
 
               <div className="flex gap-2">
-                <a
-                  href={`tel:${service.phone}`}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-center transition-colors"
-                >
-                  Call Now
-                </a>
-                {service.website && (
+                <Button className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-center transition-colors">
                   <a
-                    href={service.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-center transition-colors"
+                    href={`tel:${service.phone}`}
+                    className="flex-1  text-white px-4 py-2 rounded-md text-center transition-colors"
                   >
-                    Website
+                    Call Now
                   </a>
+                </Button>
+
+                {service.website && (
+                  <Button className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-center transition-colors">
+                    <a
+                      href={service.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Website
+                    </a>
+                  </Button>
                 )}
                 <Button
                   onClick={() =>
@@ -436,86 +440,6 @@ const NearbySupport = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Additional Resources */}
-        <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Additional Resources
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-3xl mb-3">📚</div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Self-Help Resources
-              </h4>
-              <p className="text-gray-600 text-sm mb-3">
-                Access mental health resources, coping strategies, and
-                educational materials
-              </p>
-              <Button
-                variant="outline"
-                className="text-red-600 border-red-600 hover:bg-red-50"
-              >
-                Browse Resources
-              </Button>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-3">👥</div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Support Groups
-              </h4>
-              <p className="text-gray-600 text-sm mb-3">
-                Find local and online support groups for various challenges
-              </p>
-              <Button
-                variant="outline"
-                className="text-red-600 border-red-600 hover:bg-red-50"
-              >
-                Find Groups
-              </Button>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-3">🔗</div>
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Community Partners
-              </h4>
-              <p className="text-gray-600 text-sm mb-3">
-                Connect with local organizations and volunteer opportunities
-              </p>
-              <Button
-                variant="outline"
-                className="text-red-600 border-red-600 hover:bg-red-50"
-              >
-                Get Involved
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Safety Tips */}
-        <div className="mt-8 bg-blue-50 rounded-xl p-6 border border-blue-200">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">
-            💡 Safety Tips
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-800">
-            <div>
-              <strong>In an emergency:</strong> Call 911 immediately for
-              life-threatening situations
-            </div>
-            <div>
-              <strong>Mental health crisis:</strong> Call 988 for immediate
-              support and resources
-            </div>
-            <div>
-              <strong>Save important numbers:</strong> Keep emergency contacts
-              easily accessible
-            </div>
-            <div>
-              <strong>Know your location:</strong> Be able to provide your
-              address to emergency services
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -215,7 +215,7 @@ const SubmitForm = () => {
     try {
       const response = await fetch("https://ipapi.co/json/", {
         timeout: 5000,
-      } as any)
+      } as any);
       if (response.ok) {
         const data = await response.json();
         if (data.city && data.region && data.country_name) {
@@ -685,9 +685,9 @@ const SubmitForm = () => {
         <div className="mb-5">
           <Button
             type="submit"
-            className="w-full bg-red-500 text-white hover:bg-red-600"
+            className="w-full bg-red-500 py-3 text-white hover:bg-red-600"
           >
-            {isLoading ? "Submiting..." : "Submit Report"}
+            {isLoading ? "Submitting..." : "Submit Report"}
           </Button>
         </div>
       </form>

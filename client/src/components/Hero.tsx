@@ -1,70 +1,63 @@
-import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-
-const stats = [
-  {number: "100+", label: "Reports Submitted", icon: "📝"},
-  {number: "98%", label: "Response Rate", icon: "✅"},
-  {number: "24/7", label: "Available Support", icon: "🕐"},
-];
+import {Button} from "./ui/button";
 
 const Hero = () => {
-  const [currentStat, setCurrentStat] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % stats.length);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [stats.length]);
-
+  const stats = [
+    {
+      icon: "📝",
+      value: "100+",
+      label: "Reports Submitted",
+    },
+    {
+      icon: "✅",
+      value: "98%",
+      label: "Response Rate",
+    },
+    {
+      icon: "🕐",
+      value: "24/7",
+      label: "Available Support",
+    },
+  ];
   return (
-    <section className="relative bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-white py-20 lg:py-22 overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Report.
-              <br />
-              <span className="text-red-200">Track.</span>
-              <br />
-              <span className="text-red-100">Resolve.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-red-100 mb-8 leading-relaxed">
-              Report emergencies instantly and securely with Rapid Report. Your
-              safety comes first with fast response coordination and full
-              anonymity when needed.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/submit-report"
-                className="bg-white text-red-600 px-8 py-3 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
-              >
-                Submit Report
-              </Link>
-              <Link
-                to="/how-it-works"
-                className="border-2 border-white text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-white hover:text-red-600 transition-all duration-200 text-center"
-              >
-                How It Works
-              </Link>
-            </div>
-          </div>
+    <section className="bg-gradient-to-r from-red-500 to-red-600 text-white py-24">
+      <div className="max-w-6xl mx-auto px-4 text-center">
+        <h1 className="text-5xl md:text-6xl font-bold mb-6">
+          Report. <span className="text-red-200">Track.</span>{" "}
+          <span className="text-red-100">Resolve.</span>
+        </h1>
 
-          {/* Animated Stats Card */}
-          <div className="lg:flex justify-center hidden">
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
-              <div className="text-center">
-                <div className="text-6xl mb-4 animate-bounce">
-                  {stats[currentStat].icon}
-                </div>
-                <div className="text-4xl font-bold mb-2">
-                  {stats[currentStat].number}
-                </div>
-                <div className="text-red-100 text-lg">
-                  {stats[currentStat].label}
-                </div>
-              </div>
+        <p className="text-xl md:text-2xl text-red-100 mb-10 max-w-3xl mx-auto">
+          Report emergencies instantly and securely with Rapid Report. Your
+          safety comes first with fast response coordination and full anonymity
+          when needed.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-16 w-full">
+          <Link to="/submit-report">
+            <Button className="bg-white text-red-600 px-8 py-6 rounded-lg font-semibold text-lg hover:bg-gray-100 w-full">
+              Submit Report
+            </Button>
+          </Link>
+          <Link to="/how-it-works">
+            <Button className="border-2 border-white text-white px-8 py-6 rounded-lg font-semibold text-lg hover:bg-white hover:text-red-600 w-full">
+              How It Works
+            </Button>
+          </Link>
+        </div>
+
+        {/* Simple Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="text-center bg-white/10 rounded-md p-5 "
+            >
+              <div className="text-3xl mb-2">{stat.icon}</div>
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <div className="text-red-200">{stat.label}</div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
