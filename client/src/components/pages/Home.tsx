@@ -1,5 +1,4 @@
 import Hero from "../Hero";
-// import Stats from "../Stats";
 import HowItWorksSection from "../HowItWorksSection";
 import CTASection from "../CTASection";
 import FeaturesSection from "../FeaturesSection";
@@ -10,8 +9,6 @@ const Home = () => {
     <div className="min-h-screen bg-[#FBF9FA]">
       {/* Hero Section */}
       <Hero />
-      {/* Stats Section */}
-      {/* <Stats /> */}
       {/* Features Section */}
       <FeaturesSection />
       {/* How It Works Section */}

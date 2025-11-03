@@ -200,7 +200,7 @@ const TrackReport = () => {
                       value={reportId}
                       onChange={(e) => setReportId(e.target.value)}
                       placeholder="Enter your report ID"
-                      className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
+                      className="w-full px-4 py-3 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200"
                       disabled={isLoading}
                     />
                     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -224,7 +224,7 @@ const TrackReport = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  className="w-full bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-3 rounded-md font-semibold hover:from-red-600 hover:to-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
