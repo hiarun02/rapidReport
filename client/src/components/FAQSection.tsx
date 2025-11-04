@@ -28,8 +28,8 @@ const FAQSection = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-6xl lg:py-20 py-10 px-5">
-      <h2 className="text-center font-extrabold lg:text-4xl text-3xl my-10 mb-20">
+    <div className="mx-auto max-w-6xl lg:py-25 py-10 px-5">
+      <h2 className="text-center font-extrabold lg:text-4xl text-3xl mb-20">
         Frequently Asked Questions
       </h2>
 

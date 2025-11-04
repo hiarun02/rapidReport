@@ -634,14 +634,6 @@ const SubmitForm = () => {
           </div>
           <div className="text-xs text-gray-500 mt-1">
             <p>Click the location icon to automatically detect your location</p>
-            <p className="mt-1">
-              <strong>Troubleshooting:</strong> If location detection fails,
-              make sure:
-            </p>
-            <ul className="list-disc list-inside mt-1 space-y-1">
-              <li>Location permissions are enabled for this site</li>
-              <li>GPS/Location services are enabled on your device</li>
-            </ul>
           </div>
         </div>
         {/* Report Title */}
