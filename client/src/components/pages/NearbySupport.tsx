@@ -2,6 +2,13 @@ import {useState, useEffect, useMemo} from "react";
 import {Button} from "../ui/button";
 import {Input} from "../ui/input";
 import {Badge} from "../ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface SupportService {
   id: string;
@@ -224,7 +231,7 @@ const NearbySupport = () => {
         </div>
 
         {/* Emergency Quick Actions */}
-        <div className="mb-8 bg-red-50 rounded-xl p-6 border border-red-200">
+        <div className="mb-8 rounded-xl p-6 border border-red-200">
           <h2 className="text-2xl font-bold text-red-900 mb-4 flex items-center gap-2">
             🚨 Emergency Quick Actions
           </h2>
@@ -274,19 +281,24 @@ const NearbySupport = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Category
               </label>
-              <select
+              <Select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onValueChange={(value) => setSelectedCategory(value)}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               >
-                <option value="all">All Services</option>
-                <option value="emergency">Emergency</option>
-                <option value="medical">Medical</option>
-                <option value="mental-health">Mental Health</option>
-                <option value="community">Community</option>
-                <option value="legal">Legal</option>
-                <option value="shelter">Shelter</option>
-              </select>
+                <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="border border-red-200 shadow-sm bg-white">
+                  <SelectItem value="all">All Services </SelectItem>
+                  <SelectItem value="emergency">Emergency</SelectItem>
+                  <SelectItem value="mental-health">Mental Health</SelectItem>
+                  <SelectItem value="community">Community</SelectItem>
+                  <SelectItem value="legal">Legal</SelectItem>
+                  <SelectItem value="shelter">Shelter</SelectItem>
+                  <SelectItem value="medical">Medical</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

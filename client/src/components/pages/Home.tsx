@@ -1,5 +1,4 @@
 import Hero from "../Hero";
-import HowItWorksSection from "../HowItWorksSection";
 import CTASection from "../CTASection";
 import FeaturesSection from "../FeaturesSection";
 import FAQSection from "../FAQSection";
@@ -12,8 +11,6 @@ const Home = () => {
       {/* Features Section */}
       <FeaturesSection />
       {/* How It Works Section */}
-      <HowItWorksSection />
-      {/* FAQ Section  */}
       <FAQSection />
       {/* CTA Section */}
       <CTASection />

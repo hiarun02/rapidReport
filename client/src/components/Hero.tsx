@@ -33,20 +33,23 @@ const Hero = () => {
           when needed.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-16 w-full">
-          <Link to="/submit-report">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <Link to="/submit-report" className="lg:w-fit w-full">
             <Button className="bg-white text-red-600 px-8 py-6 rounded-lg font-semibold text-lg hover:bg-gray-100 w-full">
               Submit Report
             </Button>
           </Link>
-          <Link to="/how-it-works">
-            <Button className="border-2 border-white text-white px-8 py-6 rounded-lg font-semibold text-lg hover:bg-white hover:text-red-600 w-full">
+          <Link to="/how-it-works" className="lg:w-fit w-full">
+            <Button
+              variant="outline"
+              className="border-2 border-white text-white px-8 py-6 rounded-lg font-semibold text-lg hover:bg-white hover:text-red-600 w-full"
+            >
               How It Works
             </Button>
           </Link>
         </div>
 
-        {/* Simple Stats */}
+        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
           {stats.map((stat, index) => (
             <div
