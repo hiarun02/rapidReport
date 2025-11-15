@@ -158,7 +158,3 @@ We welcome contributions! Here's how to help:
 ## License
 
 This project is open source and available under the MIT License.
-
----
-
-**Note:** This app is designed to help communities report incidents more efficiently. In real emergencies, always call 911 first.
