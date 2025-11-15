@@ -8,12 +8,12 @@ RapidReport is a web application that makes it easy for people to report inciden
 
 ## Key Features
 
-🤖 **Smart AI Analysis** - Upload a photo and let AI automatically detect what happened and fill in report details
-📱 **Easy Reporting** - Simple forms that work on any device  
-🔍 **Track Progress** - Follow your report status with a unique tracking ID
-👨‍💼 **Admin Dashboard** - Tools for administrators to manage and respond to reports
-📍 **Location Services** - Automatic location detection or manual entry
-🆘 **Emergency Support** - Quick access to emergency contacts and local services
+🤖 **Smart AI Analysis** - Upload a photo and let AI automatically detect what happened and fill in report details <br>
+📱 **Easy Reporting** - Simple forms that work on any device  <br>
+🔍 **Track Progress** - Follow your report status with a unique tracking ID <br>
+👨‍💼 **Admin Dashboard** - Tools for administrators to manage and respond to reports <br>
+📍 **Location Services** - Automatic location detection or manual entry <br>
+🆘 **Emergency Support** - Quick access to emergency contacts and local services <br>
 
 ## How It Works
 
