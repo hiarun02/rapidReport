@@ -70,3 +70,15 @@ export const getReportById = async (reportId: string) => {
     withCredentials: true,
   });
 };
+
+export const analyzeImage = async (imageFile: File) => {
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
+  return await api.post("/api/analyze-image", formData, {
+    withCredentials: true,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};

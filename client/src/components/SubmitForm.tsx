@@ -9,7 +9,7 @@ import {
 import {Label} from "./ui/label";
 import {Input} from "./ui/input";
 import {Button} from "./ui/button";
-import {submitForm} from "@/api/api";
+import {submitForm, analyzeImage} from "@/api/api";
 import {toast} from "sonner";
 import {AxiosError} from "axios";
 
@@ -37,7 +37,15 @@ const SubmitForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedReportId, setSubmittedReportId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+  interface AnalysisResults {
+    title: string;
+    description: string;
+  }
+
+  const [analysisResults, setAnalysisResults] =
+    useState<AnalysisResults | null>(null);
   const [formData, setFormData] = useState<FormData>({
     reportId: "",
     reportType: "",
@@ -59,7 +67,9 @@ const SubmitForm = () => {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -71,6 +81,37 @@ const SubmitForm = () => {
         }));
       };
       reader.readAsDataURL(file);
+
+      // Trigger AI analysis
+      await analyzeUploadedImage(file);
+    }
+  };
+
+  const analyzeUploadedImage = async (file: File) => {
+    setIsAnalyzing(true);
+    toast.info("Analyzing image with AI");
+
+    try {
+      const response = await analyzeImage(file);
+      const analysis = response.data.analysis;
+
+      // Auto-fill form fields with AI analysis
+      setFormData((prev) => ({
+        ...prev,
+        title: analysis.title || prev.title,
+        description: analysis.description || prev.description,
+      }));
+
+      toast.success(
+        "AI analysis complete! Fields auto-filled (you can edit them)"
+      );
+    } catch (error) {
+      console.error("Image analysis failed:", error);
+      toast.error(
+        "AI analysis failed, but you can still fill the form manually"
+      );
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -80,6 +121,7 @@ const SubmitForm = () => {
       imageFile: null,
       imagePreview: null,
     }));
+    setAnalysisResults(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -91,173 +133,6 @@ const SubmitForm = () => {
       toast.success("Report ID copied to clipboard!");
     } catch (error: unknown) {
       toast.error(`Failed to copy to clipboard, ${error}`);
-    }
-  };
-
-  // Get current location using geolocation API with multiple fallbacks
-  const getCurrentLocation = async () => {
-    if (!navigator.geolocation) {
-      toast.error("Geolocation is not supported by this browser");
-      await tryIPLocation();
-      return;
-    }
-
-    setIsGettingLocation(true);
-
-    // First try with high accuracy
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        await handleLocationSuccess(position);
-      },
-      async (error) => {
-        console.log("High accuracy failed, trying low accuracy...", error);
-        // If high accuracy fails, try with low accuracy
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            await handleLocationSuccess(position);
-          },
-          async (fallbackError) => {
-            console.log(
-              "Low accuracy also failed, trying IP location...",
-              fallbackError
-            );
-            await handleLocationError(fallbackError);
-          },
-          {
-            enableHighAccuracy: false,
-            timeout: 15000,
-            maximumAge: 300000, // 5 minutes
-          }
-        );
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 8000,
-        maximumAge: 60000, // 1 minute
-      }
-    );
-  };
-
-  // Handle successful location detection
-  const handleLocationSuccess = async (position: GeolocationPosition) => {
-    try {
-      const {latitude, longitude} = position.coords;
-      console.log("Location detected:", latitude, longitude);
-
-      // Try multiple geocoding services
-      let address = await tryReverseGeocode(latitude, longitude);
-
-      if (!address) {
-        address = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
-      }
-
-      toast.success("Location detected successfully!");
-    } catch (error) {
-      console.error("Error processing location:", error);
-      toast.error("Error processing location data");
-    } finally {
-      setIsGettingLocation(false);
-    }
-  };
-
-  // Try reverse geocoding with multiple services
-  const tryReverseGeocode = async (
-    lat: number,
-    lng: number
-  ): Promise<string | null> => {
-    // Service 1: BigDataCloud (free, no API key needed)
-    try {
-      const response = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`,
-        {timeout: 5000} as any
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const address = `${data.locality || ""}, ${
-          data.principalSubdivision || ""
-        }, ${data.countryName || ""}`.replace(/^,\s*|,\s*$/g, "");
-        if (address && address !== ", ,") {
-          return address;
-        }
-      }
-    } catch (error) {
-      console.log("BigDataCloud geocoding failed:", error);
-    }
-
-    // Service 2: OpenStreetMap Nominatim (free, no API key needed)
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
-        {
-          timeout: 5000,
-          headers: {
-            "User-Agent": "ReportApp/1.0",
-          },
-        } as any
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.display_name) {
-          return data.display_name;
-        }
-      }
-    } catch (error) {
-      console.log("Nominatim geocoding failed:", error);
-    }
-
-    return null;
-  };
-
-  // Try IP-based location as final fallback
-  const tryIPLocation = async () => {
-    try {
-      const response = await fetch("https://ipapi.co/json/", {
-        timeout: 5000,
-      } as any);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.city && data.region && data.country_name) {
-          const address = `${data.city}, ${data.region}, ${data.country_name}`;
-          setFormData((prev) => ({
-            ...prev,
-            location: address,
-          }));
-          toast.success("Location detected using IP address!");
-          setIsGettingLocation(false);
-          return;
-        }
-      }
-    } catch (error) {
-      console.log("IP location failed:", error);
-    }
-
-    setIsGettingLocation(false);
-    toast.error("Unable to detect location. Please enter manually.");
-  };
-
-  // Handle location detection errors
-  const handleLocationError = async (error: GeolocationPositionError) => {
-    console.log("Geolocation error:", error);
-
-    switch (error.code) {
-      case error.PERMISSION_DENIED:
-        toast.error("Location access denied. Trying alternative method...");
-        await tryIPLocation();
-        break;
-      case error.POSITION_UNAVAILABLE:
-        toast.error("GPS unavailable. Trying alternative method...");
-        await tryIPLocation();
-        break;
-      case error.TIMEOUT:
-        toast.error("Location request timed out. Trying alternative method...");
-        await tryIPLocation();
-        break;
-      default:
-        toast.error("Location detection failed. Trying alternative method...");
-        await tryIPLocation();
-        break;
     }
   };
 
@@ -473,15 +348,16 @@ const SubmitForm = () => {
             id="image-upload"
             className="hidden"
             ref={fileInputRef}
+            disabled={isAnalyzing}
           />
           <label
             htmlFor="image-upload"
-            className={`border-2 px-8 py-8 w-full block rounded-lg border-dashed hover:border-red-400/50 hover:bg-red-400/10 cursor-pointer
+            className={`border-2 px-8 py-8 w-full block rounded-lg border-dashed hover:border-red-400/50 hover:bg-red-400/10 cursor-pointer transition-all
             ${
               formData.imagePreview
                 ? "border-red-400/50 bg-sky-400/10"
                 : "border-gray-300"
-            }`}
+            } ${isAnalyzing ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {!formData.imagePreview ? (
               <div className="flex flex-col justify-center items-center space-y-4">
@@ -500,6 +376,9 @@ const SubmitForm = () => {
                 </svg>
                 <span className="text-sm text-zinc-400">
                   Drop an image here or click to upload
+                </span>
+                <span className="text-xs text-red-600 font-medium">
+                  AI will automatically analyze and fill the form
                 </span>
               </div>
             ) : (
@@ -530,6 +409,14 @@ const SubmitForm = () => {
                   alt="Uploaded preview"
                   className="rounded-xl max-h-60 object-contain border border-gray-200"
                 />
+                {isAnalyzing && (
+                  <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
+                    <div className="text-white text-center">
+                      <div className="animate-spin w-8 h-8 border-4 border-white border-t-transparent rounded-full mx-auto mb-2"></div>
+                      <span className="text-sm">🤖 AI Analyzing...</span>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </label>
@@ -578,62 +465,6 @@ const SubmitForm = () => {
               placeholder="Enter the location or click to detect"
               className="border border-gray-300 rounded-md p-2 flex-1"
             />
-            <Button
-              type="button"
-              onClick={getCurrentLocation}
-              disabled={isGettingLocation}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center gap-2 whitespace-nowrap"
-            >
-              {isGettingLocation ? (
-                <>
-                  <svg
-                    className="animate-spin h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Getting...
-                </>
-              ) : (
-                <>
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </>
-              )}
-            </Button>
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            <p>Click the location icon to automatically detect your location</p>
           </div>
         </div>
         {/* Report Title */}

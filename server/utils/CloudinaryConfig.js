@@ -8,4 +8,17 @@ cloudinary.config({
   secure: true,
 });
 
+export const uploadOnCloudinary = async (fileUri) => {
+  try {
+    const result = await cloudinary.uploader.upload(fileUri.content, {
+      resource_type: "auto",
+      folder: "rapid-report",
+    });
+    return result;
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    throw error;
+  }
+};
+
 export default cloudinary;

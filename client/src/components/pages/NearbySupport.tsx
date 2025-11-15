@@ -284,7 +284,6 @@ const NearbySupport = () => {
               <Select
                 value={selectedCategory}
                 onValueChange={(value) => setSelectedCategory(value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               >
                 <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
                   <SelectValue placeholder="Select a category" />
