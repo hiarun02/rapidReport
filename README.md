@@ -67,56 +67,6 @@ rapidReport/
 └── README.md
 ```
 
-## Getting Started
-
-### What You Need
-
-- Node.js (version 18 or newer)
-- MongoDB database
-- Google Gemini API key
-- Cloudinary account for image storage
-
-### Setup Instructions
-
-1. **Clone the project**
-
-```bash
-git clone <your-repo-url>
-cd rapidReport
-```
-
-2. **Setup the server**
-
-```bash
-cd server
-npm install
-```
-
-Create a `.env` file in the server folder:
-
-```
-DB_String=your_mongodb_connection
-GEMINI_API_KEY=your_google_gemini_key
-CLOUD_NAME=your_cloudinary_name
-CLOUD_API_KEY=your_cloudinary_key
-CLOUD_SECRET_API=your_cloudinary_secret
-```
-
-3. **Setup the client**
-
-```bash
-cd ../client
-npm install
-
-# Start the development server
-npm run dev
-```
-
-### 4. Access the Application
-
-- Frontend: http://localhost:5174 (or 5173)
-- Backend API: http://localhost:8123
-
 ## How to Use
 
 ### For Regular Users
