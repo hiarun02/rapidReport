@@ -23,7 +23,7 @@ RapidReport is a web application that makes it easy for people to report inciden
 4. **Track Progress** - Use your report ID to see status updates
 
 ## Technology Stack
-
+   
 **Frontend**
 
 - React 19 with TypeScript
