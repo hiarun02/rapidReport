@@ -1,8 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
-import {useAdminStore} from "@/store/useAdminStore";
 import {LogOut} from "lucide-react";
-import {toast} from "sonner";
 import {Button} from "./ui/button";
 
 const navItems = [
@@ -31,8 +29,16 @@ const navItems = [
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const {admin, clearAdmin} = useAdminStore();
+  const [admin, setAdmin] = useState(null);
   const navigate = useNavigate();
+
+  // Load admin from localStorage on component mount
+  useEffect(() => {
+    const savedAdmin = localStorage.getItem("adminUser");
+    if (savedAdmin) {
+      setAdmin(JSON.parse(savedAdmin));
+    }
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -50,8 +56,8 @@ const Header = () => {
 
   // logout
   const handleLogout = () => {
-    clearAdmin();
-    toast.success("Logged out successfully");
+    localStorage.removeItem("adminUser");
+    setAdmin(null);
     navigate("/admin/login");
   };
 

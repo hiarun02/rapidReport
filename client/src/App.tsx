@@ -11,6 +11,7 @@ import NotFound from "./components/pages/NotFound";
 import Login from "./components/admin/login/Login";
 import Dashboard from "./components/admin/dashboard/Dashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import {AdminProvider} from "./context/AdminContext";
 
 const router = createBrowserRouter([
   {
@@ -64,7 +65,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AdminProvider>
+      <RouterProvider router={router} />
+    </AdminProvider>
+  );
 }
 
 export default App;

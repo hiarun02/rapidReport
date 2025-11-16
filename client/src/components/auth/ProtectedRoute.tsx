@@ -1,12 +1,12 @@
 import {Navigate, useLocation} from "react-router-dom";
-import {useAdminStore} from "@/store/useAdminStore";
+import {useAdmin} from "@/hooks/useAdmin";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
 const ProtectedRoute = ({children}: ProtectedRouteProps) => {
-  const {admin} = useAdminStore();
+  const {admin} = useAdmin();
   const location = useLocation();
 
   // If no admin is logged in, redirect to login page

@@ -197,25 +197,6 @@ const NearbySupport = () => {
     }
   };
 
-  const getServiceTypeIcon = (type: string) => {
-    switch (type) {
-      case "emergency":
-        return "🚨";
-      case "medical":
-        return "🏥";
-      case "mental-health":
-        return "🧠";
-      case "community":
-        return "🤝";
-      case "legal":
-        return "⚖️";
-      case "shelter":
-        return "🏠";
-      default:
-        return "📍";
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -231,16 +212,15 @@ const NearbySupport = () => {
         </div>
 
         {/* Emergency Quick Actions */}
-        <div className="mb-8 rounded-xl p-6 border border-red-200">
-          <h2 className="text-2xl font-bold text-red-900 mb-4 flex items-center gap-2">
-            🚨 Emergency Quick Actions
+        <div className="mb-8 rounded-xl p-6 border border-red-400">
+          <h2 className="text-2xl font-bold text-red-900 mb-4">
+            Emergency Quick Actions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <a
               href="tel:911"
               className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg text-center transition-colors"
             >
-              <div className="text-2xl mb-2">📞</div>
               <div className="font-bold">Call 911</div>
               <div className="text-sm opacity-90">Emergency Services</div>
             </a>
@@ -248,7 +228,6 @@ const NearbySupport = () => {
               href="tel:988"
               className="bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-lg text-center transition-colors"
             >
-              <div className="text-2xl mb-2">🧠</div>
               <div className="font-bold">Call 988</div>
               <div className="text-sm opacity-90">Crisis Lifeline</div>
             </a>
@@ -256,7 +235,6 @@ const NearbySupport = () => {
               href="sms:741741?body=HOME"
               className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-center transition-colors"
             >
-              <div className="text-2xl mb-2">💬</div>
               <div className="font-bold">Text 741741</div>
               <div className="text-sm opacity-90">Crisis Text Line</div>
             </a>
@@ -291,7 +269,6 @@ const NearbySupport = () => {
                 <SelectContent className="border border-red-200 shadow-sm bg-white">
                   <SelectItem value="all">All Services </SelectItem>
                   <SelectItem value="emergency">Emergency</SelectItem>
-                  <SelectItem value="mental-health">Mental Health</SelectItem>
                   <SelectItem value="community">Community</SelectItem>
                   <SelectItem value="legal">Legal</SelectItem>
                   <SelectItem value="shelter">Shelter</SelectItem>
@@ -310,18 +287,13 @@ const NearbySupport = () => {
               className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl">
-                    {getServiceTypeIcon(service.type)}
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {service.name}
-                    </h3>
-                    <Badge className={getServiceTypeColor(service.type)}>
-                      {service.type.replace("-", " ")}
-                    </Badge>
-                  </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {service.name}
+                  </h3>
+                  <Badge className={getServiceTypeColor(service.type)}>
+                    {service.type.replace("-", " ")}
+                  </Badge>
                 </div>
                 <div className="flex items-center gap-2">
                   {service.isOpen ? (

@@ -19,10 +19,10 @@ const FeaturesSection = () => {
         "Your privacy is protected with optional anonymous reporting",
     },
     {
-      icon: "📍",
-      title: "Location-based",
+      icon: "📸",
+      title: "Quick Report Mode",
       description:
-        "Automatically route reports to the appropriate local authorities",
+        "Upload a photo and our AI will help you fill out the report details fast",
     },
     {
       icon: "📱",
