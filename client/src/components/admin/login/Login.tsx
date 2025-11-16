@@ -2,11 +2,11 @@ import {adminLogin} from "@/api/api";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {useAdminStore} from "@/store/useAdminStore";
-import {LogInIcon, EyeIcon, EyeOffIcon} from "lucide-react";
+import {EyeIcon, EyeOffIcon} from "lucide-react";
 import {useState} from "react";
 import {useNavigate, useLocation} from "react-router-dom";
 import {toast} from "sonner";
+import {useAdmin} from "@/hooks/useAdmin";
 
 const Login = () => {
   interface FormData {
@@ -19,9 +19,9 @@ const Login = () => {
     password: "",
   });
 
-  const {setAdmin} = useAdminStore();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const {setAdmin} = useAdmin();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,15 +39,18 @@ const Login = () => {
       if (response.status === 200 || response.data.status === 200) {
         const {admin} = response.data;
         setAdmin(admin);
-        toast.success(response.data.message || "Logged in successfully 🎉");
         navigate(from, {replace: true});
       } else {
         toast.error(response?.data?.message || "Invalid credentials!");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const err = error as {
+        response?: {data?: {message?: string}};
+        message?: string;
+      };
       const message =
-        error?.response?.data?.message ||
-        error?.message ||
+        err?.response?.data?.message ||
+        err?.message ||
         "Something went wrong. Please try again!";
       toast.error(message);
     } finally {
@@ -133,13 +136,10 @@ const Login = () => {
               {isLoading ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Signing in...
+                  Login...
                 </>
               ) : (
-                <>
-                  <LogInIcon className="w-5 h-5" />
-                  Sign In
-                </>
+                <>Login</>
               )}
             </Button>
           </form>

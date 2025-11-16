@@ -39,13 +39,6 @@ const SubmitForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  interface AnalysisResults {
-    title: string;
-    description: string;
-  }
-
-  const [analysisResults, setAnalysisResults] =
-    useState<AnalysisResults | null>(null);
   const [formData, setFormData] = useState<FormData>({
     reportId: "",
     reportType: "",
@@ -121,7 +114,6 @@ const SubmitForm = () => {
       imageFile: null,
       imagePreview: null,
     }));
-    setAnalysisResults(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
