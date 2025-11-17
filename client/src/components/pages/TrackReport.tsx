@@ -35,6 +35,7 @@ const TrackReport = () => {
       return;
     }
 
+    
     setIsLoading(true);
     setHasSearched(true);
 

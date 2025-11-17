@@ -1,20 +1,8 @@
-import {createContext, ReactNode, useState} from "react";
+import {createContext, useState} from "react";
 
-export interface AdminState {
-  admin: AdminUser | null;
-  setAdmin: (admin: AdminUser | null) => void;
-  clearAdmin: () => void;
-}
+import type {AdminState, AdminUser} from "@/types";
 
-export interface AdminUser {
-  id: string;
-  email: string;
-  name?: string;
-}
-
-interface AdminProviderProps {
-  children: ReactNode;
-}
+export type {AdminState, AdminUser};
 
 const AdminContext = createContext<AdminState | undefined>(undefined);
 

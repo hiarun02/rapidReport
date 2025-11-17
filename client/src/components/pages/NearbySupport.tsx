@@ -9,25 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-
-interface SupportService {
-  id: string;
-  name: string;
-  type:
-    | "emergency"
-    | "medical"
-    | "mental-health"
-    | "community"
-    | "legal"
-    | "shelter";
-  phone: string;
-  address: string;
-  description: string;
-  hours: string;
-  distance?: string;
-  isOpen?: boolean;
-  website?: string;
-}
+import type {SupportService} from "@/types";
 
 const NearbySupport = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");

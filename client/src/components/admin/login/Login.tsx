@@ -9,12 +9,7 @@ import {toast} from "sonner";
 import {useAdmin} from "@/hooks/useAdmin";
 
 const Login = () => {
-  interface FormData {
-    email: string;
-    password: string;
-  }
-
-  const [form, setForm] = useState<FormData>({
+  const [form, setForm] = useState<LoginFormData>({
     email: "",
     password: "",
   });
