@@ -12,20 +12,9 @@ import {Button} from "./ui/button";
 import {submitForm, analyzeImage} from "@/api/api";
 import {toast} from "sonner";
 import {AxiosError} from "axios";
+import type {SubmitFormData} from "@/types";
 
 const SubmitForm = () => {
-  // Form data interface
-  interface FormData {
-    reportId: string;
-    reportType: "emergency" | "non-emergency" | "";
-    imageFile: File | null;
-    imagePreview: string | null;
-    incidentType: string;
-    title: string;
-    description: string;
-    location: string;
-  }
-
   // Generate a unique report ID
   const generateReportID = useCallback(() => {
     const timestamp = Date.now().toString();
@@ -38,8 +27,9 @@ const SubmitForm = () => {
   const [submittedReportId, setSubmittedReportId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<SubmitFormData>({
     reportId: "",
     reportType: "",
     imageFile: null,
@@ -59,6 +49,79 @@ const SubmitForm = () => {
   }, [generateReportID]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Validation functions
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Report type validation
+    if (!formData.reportType) {
+      newErrors.reportType =
+        "Please select a report type (Emergency or Non-Emergency)";
+    }
+
+    // Incident type validation
+    if (!formData.incidentType) {
+      newErrors.incidentType = "Please select an incident type";
+    }
+
+    // Title validation
+    if (!formData.title.trim()) {
+      newErrors.title = "Report title is required";
+    } else if (formData.title.trim().length < 5) {
+      newErrors.title = "Title must be at least 5 characters long";
+    } else if (formData.title.trim().length > 100) {
+      newErrors.title = "Title must be less than 100 characters";
+    }
+
+    // Description validation
+    if (!formData.description.trim()) {
+      newErrors.description = "Report description is required";
+    } else if (formData.description.trim().length < 10) {
+      newErrors.description = "Description must be at least 10 characters long";
+    } else if (formData.description.trim().length > 1000) {
+      newErrors.description = "Description must be less than 1000 characters";
+    }
+
+    // Location validation
+    if (!formData.location.trim()) {
+      newErrors.location = "Location is required";
+    } else if (formData.location.trim().length < 3) {
+      newErrors.location = "Location must be at least 3 characters long";
+    }
+
+    // Image validation (optional but if provided should be valid)
+    if (formData.imageFile) {
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (formData.imageFile.size > maxSize) {
+        newErrors.image = "Image file size must be less than 5MB";
+      }
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+      ];
+      if (!allowedTypes.includes(formData.imageFile.type)) {
+        newErrors.image = "Only JPEG, PNG, and WebP images are allowed";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Clear specific error when user starts typing
+  const clearError = (fieldName: string) => {
+    if (errors[fieldName]) {
+      setErrors((prev) => {
+        const newErrors = {...prev};
+        delete newErrors[fieldName];
+        return newErrors;
+      });
+    }
+  };
 
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -131,6 +194,7 @@ const SubmitForm = () => {
   const resetForm = () => {
     setIsSubmitted(false);
     setSubmittedReportId("");
+    setErrors({});
     setFormData({
       reportId: generateReportID(),
       reportType: "",
@@ -148,15 +212,29 @@ const SubmitForm = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Validate form before submission
+    if (!validateForm()) {
+      toast.error("Please fix the errors in the form before submitting");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const response = await submitForm(formData);
       toast.success(response.data.message);
       setSubmittedReportId(response.data.reportId);
       setIsSubmitted(true);
+      setErrors({}); // Clear all errors on successful submission
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data?.message || "Something went wrong!");
+        const serverErrors = error.response?.data?.errors;
+        if (serverErrors && typeof serverErrors === "object") {
+          setErrors(serverErrors);
+          toast.error("Please fix the validation errors");
+        } else {
+          toast.error(error.response?.data?.message || "Something went wrong!");
+        }
       } else {
         toast.error("An unexpected error occurred!");
       }
@@ -251,85 +329,95 @@ const SubmitForm = () => {
     <div className="mx-auto max-w-3xl px-5 border border-gray-200 rounded-2xl bg-white mb-10">
       <form className="" onSubmit={handleSubmit}>
         {/* report type */}
-        <div className="flex justify-between items-center py-5 gap-4 flex-col sm:flex-row">
-          {/* Emergency Box */}
-          <button
-            type="button"
-            onClick={() =>
-              setFormData((prev) => ({
-                ...prev,
-                reportType: "emergency",
-              }))
-            }
-            className={`border rounded-lg p-10 flex flex-col items-center gap-2 transition-all w-full focus:outline-none
+        <div className="py-5">
+          <Label className="block mb-3 text-sm font-medium text-gray-700">
+            Report Type <span className="text-red-500">*</span>
+          </Label>
+          <div className="flex justify-between items-center gap-4 flex-col sm:flex-row">
+            {/* Emergency Box */}
+            <button
+              type="button"
+              onClick={() => {
+                setFormData((prev) => ({
+                  ...prev,
+                  reportType: "emergency",
+                }));
+                clearError("reportType");
+              }}
+              className={`border rounded-lg p-10 flex flex-col items-center gap-2 transition-all w-full focus:outline-none
             ${
               formData.reportType === "emergency"
                 ? "border-red-500 ring-2 ring-red-200 bg-red-50"
                 : "border-gray-200 bg-white hover:border-red-400"
             }`}
-            aria-pressed={formData.reportType === "emergency"}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-triangle-alert text-red-500 w-8 h-8"
+              aria-pressed={formData.reportType === "emergency"}
             >
-              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
-              <path d="M12 9v4"></path>
-              <path d="M12 17h.01"></path>
-            </svg>
-            <div className="flex flex-col items-center">
-              <span className="font-semibold">Emergency</span>
-              <p className="text-gray-500 text-sm">
-                Immediate Response Required
-              </p>
-            </div>
-          </button>
-          {/* Non-Emergency Box */}
-          <button
-            type="button"
-            onClick={() =>
-              setFormData((prev) => ({
-                ...prev,
-                reportType: "non-emergency",
-              }))
-            }
-            className={`border rounded-lg p-10 flex flex-col items-center gap-2 transition-all w-full focus:outline-none
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-triangle-alert text-red-500 w-8 h-8"
+              >
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
+                <path d="M12 9v4"></path>
+                <path d="M12 17h.01"></path>
+              </svg>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">Emergency</span>
+                <p className="text-gray-500 text-sm">
+                  Immediate Response Required
+                </p>
+              </div>
+            </button>
+            {/* Non-Emergency Box */}
+            <button
+              type="button"
+              onClick={() => {
+                setFormData((prev) => ({
+                  ...prev,
+                  reportType: "non-emergency",
+                }));
+                clearError("reportType");
+              }}
+              className={`border rounded-lg p-10 flex flex-col items-center gap-2 transition-all w-full focus:outline-none
             ${
               formData.reportType === "non-emergency"
                 ? "border-orange-500 ring-2 ring-orange-200 bg-orange-50"
                 : "border-gray-200 bg-white hover:border-orange-400"
             }`}
-            aria-pressed={formData.reportType === "non-emergency"}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-info text-orange-500 w-8 h-8"
+              aria-pressed={formData.reportType === "non-emergency"}
             >
-              <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 16v-4"></path>
-              <path d="M12 8h.01"></path>
-            </svg>
-            <div className="flex flex-col items-center">
-              <span className="font-semibold">Non Emergency</span>
-              <p className="text-gray-500 text-sm">General Inquiry</p>
-            </div>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-info text-orange-500 w-8 h-8"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 16v-4"></path>
+                <path d="M12 8h.01"></path>
+              </svg>
+              <div className="flex flex-col items-center">
+                <span className="font-semibold">Non Emergency</span>
+                <p className="text-gray-500 text-sm">General Inquiry</p>
+              </div>
+            </button>
+          </div>
+          {errors.reportType && (
+            <p className="text-red-500 text-sm mt-2">{errors.reportType}</p>
+          )}
         </div>
         {/* image upload */}
         <div className="relative">
@@ -412,17 +500,21 @@ const SubmitForm = () => {
               </div>
             )}
           </label>
+          {errors.image && (
+            <p className="text-red-500 text-sm mt-2">{errors.image}</p>
+          )}
         </div>
         {/* Report Category Selector */}
         <div className="my-5">
           <Label htmlFor="incident-type" className="block mb-3">
-            Incident Type
+            Incident Type <span className="text-red-500">*</span>
           </Label>
           <Select
             value={formData.incidentType}
-            onValueChange={(value) =>
-              setFormData((prev) => ({...prev, incidentType: value}))
-            }
+            onValueChange={(value) => {
+              setFormData((prev) => ({...prev, incidentType: value}));
+              clearError("incidentType");
+            }}
           >
             <SelectTrigger className="border border-gray-300 rounded-md p-2 w-full">
               <SelectValue placeholder="Select a category" />
@@ -438,63 +530,92 @@ const SubmitForm = () => {
               <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
+          {errors.incidentType && (
+            <p className="text-red-500 text-sm mt-2">{errors.incidentType}</p>
+          )}
         </div>
         {/* location section */}
         <div className="mb-5">
           <Label htmlFor="location" className="block mb-2">
-            Location
+            Location <span className="text-red-500">*</span>
           </Label>
           <div className="flex gap-2">
             <Input
               id="location"
               value={formData.location}
-              onChange={(e) =>
+              onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
                   location: e.target.value,
-                }))
-              }
+                }));
+                clearError("location");
+              }}
               placeholder="Enter the location or click to detect"
-              className="border border-gray-300 rounded-md p-2 flex-1"
+              className={`border rounded-md p-2 flex-1 ${
+                errors.location ? "border-red-500" : "border-gray-300"
+              }`}
             />
           </div>
+          {errors.location && (
+            <p className="text-red-500 text-sm mt-2">{errors.location}</p>
+          )}
         </div>
         {/* Report Title */}
         <div className="mb-5">
           <Label htmlFor="title" className="block mb-2">
-            Report Title
+            Report Title <span className="text-red-500">*</span>
+            <span className="text-gray-500 text-sm font-normal">
+              ({formData.title.length}/50)
+            </span>
           </Label>
           <Input
             id="title"
             value={formData.title}
-            onChange={(e) =>
+            onChange={(e) => {
               setFormData((prev) => ({
                 ...prev,
                 title: e.target.value,
-              }))
-            }
+              }));
+              clearError("title");
+            }}
             placeholder="Enter a brief title for your report"
-            className="border border-gray-300 rounded-md p-2 w-full"
+            maxLength={100}
+            className={`border rounded-md p-2 w-full ${
+              errors.title ? "border-red-500" : "border-gray-300"
+            }`}
           />
+          {errors.title && (
+            <p className="text-red-500 text-sm mt-2">{errors.title}</p>
+          )}
         </div>
         {/* Report Description */}
         <div className="mb-5">
           <Label htmlFor="description" className="block mb-2">
-            Report Description
+            Report Description <span className="text-red-500">*</span>
+            <span className="text-gray-500 text-sm font-normal">
+              ({formData.description.length}/200)
+            </span>
           </Label>
           <textarea
             id="description"
             value={formData.description}
-            onChange={(e) =>
+            onChange={(e) => {
               setFormData((prev) => ({
                 ...prev,
                 description: e.target.value,
-              }))
-            }
+              }));
+              clearError("description");
+            }}
             rows={4}
-            className="w-full border border-gray-300 rounded-md p-2"
-            placeholder="Provide a detailed description of the incident"
+            maxLength={1000}
+            className={`w-full border rounded-md p-2 ${
+              errors.description ? "border-red-500" : "border-gray-300"
+            }`}
+            placeholder="Provide a detailed description of the incident (minimum 10 characters)"
           />
+          {errors.description && (
+            <p className="text-red-500 text-sm mt-2">{errors.description}</p>
+          )}
         </div>
         {/* Report Submission */}
         <div className="mb-5">
