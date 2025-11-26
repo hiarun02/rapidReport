@@ -7,8 +7,8 @@ export type {AdminState, AdminUser};
 const AdminContext = createContext<AdminState | undefined>(undefined);
 
 export const AdminProvider = ({children}: AdminProviderProps) => {
-  const [admin, setAdminState] = useState<AdminUser | null>(() => {
-    const savedAdmin = localStorage.getItem("adminUser");
+  const [admin, setAdminState] = useState<AdminUser | null>(() => { // 
+    const savedAdmin = localStorage.getItem("adminUser"); // 
     return savedAdmin ? JSON.parse(savedAdmin) : null;
   });
 

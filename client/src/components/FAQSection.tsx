@@ -33,7 +33,7 @@ const FAQSection = () => {
         Frequently Asked Questions
       </h2>
 
-      <Accordion type="single" collapsible className="w-[70vw] mx-auto">
+      <Accordion type="single" collapsible className="lg:w-[80vw] mx-auto">
         {faqs.map((faq) => (
           <AccordionItem value={faq.id} key={faq.id}>
             <AccordionTrigger className="text-left font-medium lg:text-lg text-base">

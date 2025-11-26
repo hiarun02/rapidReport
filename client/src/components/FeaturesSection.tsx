@@ -1,36 +1,43 @@
+import {ImPower} from "react-icons/im";
+import {BiBarChartSquare} from "react-icons/bi";
+import {MdOutlineSecurity} from "react-icons/md";
+import {FaCamera} from "react-icons/fa";
+import {FaMobile} from "react-icons/fa";
+import {BiSolidCategoryAlt} from "react-icons/bi";
+
 const FeaturesSection = () => {
   const features = [
     {
-      icon: "⚡",
+      icon: <ImPower />,
       title: "Instant Reporting",
       description:
         "Submit incident reports in seconds with our streamlined interface",
     },
     {
-      icon: "📊",
+      icon: <BiBarChartSquare />,
       title: "Real-time Tracking",
       description:
         "Monitor your report status and receive updates as authorities respond",
     },
     {
-      icon: "🔒",
+      icon: <MdOutlineSecurity />,
       title: "Secure & Anonymous",
       description:
         "Your privacy is protected with optional anonymous reporting",
     },
     {
-      icon: "📸",
+      icon: <FaCamera />,
       title: "Quick Report Mode",
       description:
         "Upload a photo and our AI will help you fill out the report details fast",
     },
     {
-      icon: "📱",
+      icon: <FaMobile/>,
       title: "Mobile Optimized",
       description: "Report incidents from anywhere using any device",
     },
     {
-      icon: "♻️",
+      icon: <BiSolidCategoryAlt/>,
       title: "Incident Categorization",
       description: "Quickly classify reports as emergency or non-emergency.",
     },
@@ -54,7 +61,9 @@ const FeaturesSection = () => {
             <div key={index} className="group">
               <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-gray-200 ">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="text-4xl ">{feature.icon}</div>
+                  <div className="text-3xl border-red-300 shadow p-3 rounded-lg ">
+                    {feature.icon}
+                  </div>
                   <h3 className="text-xl font-bold text-gray-900">
                     {feature.title}
                   </h3>

@@ -1,4 +1,5 @@
 import {useState, useRef, useCallback, useEffect} from "react";
+import {MdLocationOn} from "react-icons/md";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,8 @@ import {Input} from "./ui/input";
 import {Button} from "./ui/button";
 import {submitForm, analyzeImage} from "@/api/api";
 import {toast} from "sonner";
-import {AxiosError} from "axios";
+import {useGeolocation} from "@/hooks/useGeoLocation";
+
 import type {SubmitFormData} from "@/types";
 
 const SubmitForm = () => {
@@ -22,6 +24,12 @@ const SubmitForm = () => {
     const reportPrefix = "RPT";
     return `${reportPrefix}-${timestamp.slice(-8)}-${randomPart.toUpperCase()}`;
   }, []);
+
+  const {
+    loading: locationLoading,
+    fetchLocation,
+    getAddressFromCoordinates,
+  } = useGeolocation();
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedReportId, setSubmittedReportId] = useState("");
@@ -123,6 +131,35 @@ const SubmitForm = () => {
     }
   };
 
+  // Handle location detection
+  const handleGetLocation = async () => {
+    try {
+      toast.info("Getting your location...");
+      const position = await fetchLocation();
+
+      // Convert coordinates to address
+      const address = await getAddressFromCoordinates(
+        position.lat,
+        position.lon
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        location: address,
+      }));
+
+      clearError("location");
+      toast.success("Location detected successfully!");
+    } catch (error) {
+      console.error("Location error:", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to get location. Please enter manually.");
+      }
+    }
+  };
+
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -159,7 +196,7 @@ const SubmitForm = () => {
       }));
 
       toast.success(
-        "AI analysis complete! Fields auto-filled (you can edit them)"
+        "AI analysis complete Fields auto-filled (you can edit them)"
       );
     } catch (error) {
       console.error("Image analysis failed:", error);
@@ -227,18 +264,9 @@ const SubmitForm = () => {
       setIsSubmitted(true);
       setErrors({}); // Clear all errors on successful submission
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        const serverErrors = error.response?.data?.errors;
-        if (serverErrors && typeof serverErrors === "object") {
-          setErrors(serverErrors);
-          toast.error("Please fix the validation errors");
-        } else {
-          toast.error(error.response?.data?.message || "Something went wrong!");
-        }
-      } else {
-        toast.error("An unexpected error occurred!");
+      if (error) {
+        toast.error("Submission failed. Please try again later.");
       }
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -289,7 +317,7 @@ const SubmitForm = () => {
               <Button
                 type="button"
                 onClick={() => copyToClipboard(submittedReportId)}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2"
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2"
               >
                 <svg
                   className="w-4 h-4 mr-2"
@@ -555,6 +583,23 @@ const SubmitForm = () => {
                 errors.location ? "border-red-500" : "border-gray-300"
               }`}
             />
+            <Button
+              onClick={handleGetLocation}
+              type="button"
+              disabled={locationLoading}
+              className="bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md flex items-center gap-2 whitespace-nowrap"
+            >
+              {locationLoading ? (
+                <>
+                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                  <span className="text-sm">Getting...</span>
+                </>
+              ) : (
+                <>
+                  <MdLocationOn className="w-4 h-4" />
+                </>
+              )}
+            </Button>
           </div>
           {errors.location && (
             <p className="text-red-500 text-sm mt-2">{errors.location}</p>
@@ -565,7 +610,7 @@ const SubmitForm = () => {
           <Label htmlFor="title" className="block mb-2">
             Report Title <span className="text-red-500">*</span>
             <span className="text-gray-500 text-sm font-normal">
-              ({formData.title.length}/50)
+              ({formData.title.length}/100)
             </span>
           </Label>
           <Input
@@ -593,7 +638,7 @@ const SubmitForm = () => {
           <Label htmlFor="description" className="block mb-2">
             Report Description <span className="text-red-500">*</span>
             <span className="text-gray-500 text-sm font-normal">
-              ({formData.description.length}/200)
+              ({formData.description.length}/1000)
             </span>
           </Label>
           <textarea

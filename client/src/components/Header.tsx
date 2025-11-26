@@ -81,7 +81,7 @@ const Header = () => {
                 to="/"
                 className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-200"
               >
-                Rapid<span className="text-red-500">Report</span>
+                Rapid<span className="text-red-500 ">Report</span>
               </Link>
             </div>
             {/* left section  */}
@@ -134,7 +134,7 @@ const Header = () => {
               to="/"
               className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors duration-200"
             >
-              Rapid<span className="text-red-500">Report</span>
+              RapidReport
             </Link>
           </div>
 
