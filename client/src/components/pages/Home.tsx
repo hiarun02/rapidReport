@@ -10,10 +10,11 @@ const Home = () => {
       <Hero />
       {/* Features Section */}
       <FeaturesSection />
-      {/* How It Works Section */}
-      <FAQSection />
+
       {/* CTA Section */}
       <CTASection />
+      {/* How It Works Section */}
+      <FAQSection />
     </div>
   );
 };

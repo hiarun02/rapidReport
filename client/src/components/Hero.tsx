@@ -4,17 +4,14 @@ import {Button} from "./ui/button";
 const Hero = () => {
   const stats = [
     {
-      icon: "📝",
       value: "100+",
       label: "Reports Submitted",
     },
     {
-      icon: "✅",
       value: "98%",
       label: "Response Rate",
     },
     {
-      icon: "🕐",
       value: "24/7",
       label: "Available Support",
     },
@@ -42,7 +39,7 @@ const Hero = () => {
           <Link to="/how-it-works" className="lg:w-fit w-full">
             <Button
               variant="outline"
-              className="border-2 border-white text-white px-8 py-6 rounded-lg font-semibold text-lg hover:bg-white hover:text-red-600 w-full"
+              className="border-2 border-white text-white px-8 py-6 rounded-lg font-semibold text-lg hover:bg-white hover:text-red-600 w-full duration-100"
             >
               How It Works
             </Button>
@@ -54,9 +51,8 @@ const Hero = () => {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="text-center bg-white/10 rounded-md p-5 "
+              className="text-center bg-white/10 rounded-md px-5 py-8"
             >
-              <div className="text-3xl mb-2">{stat.icon}</div>
               <div className="text-2xl font-bold">{stat.value}</div>
               <div className="text-red-200">{stat.label}</div>
             </div>
