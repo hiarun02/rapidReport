@@ -31,9 +31,18 @@ const Login = () => {
     try {
       const {email, password} = form;
       const response = await adminLogin(email, password);
-      if (response.status === 200 || response.data.status === 200) {
-        const {admin} = response.data;
+
+      if (response.status === 200 && response.data?.data?.token) {
+        const {admin, token} = response.data.data;
+
+        // Store token and admin in localStorage
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("admin", JSON.stringify(admin));
+
+        // Update context
         setAdmin(admin);
+
+        toast.success("Login successful!");
         navigate(from, {replace: true});
       } else {
         toast.error(response?.data?.message || "Invalid credentials!");

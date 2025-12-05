@@ -1,5 +1,5 @@
 import {useState, useRef, useCallback, useEffect} from "react";
-import {MdLocationOn} from "react-icons/md";
+import {MapPin} from "lucide-react";
 import {
   Select,
   SelectContent,

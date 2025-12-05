@@ -5,6 +5,28 @@ export const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
 });
 
+// Add token to request headers
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Handle 401 responses
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("admin");
+      window.location.href = "/admin/login";
+    }
+    return Promise.reject(error);
+  }
+);
+
 interface FormData {
   reportId: string;
   reportType: "emergency" | "non-emergency" | "";
@@ -31,7 +53,6 @@ export const submitForm = async (formData: FormData) => {
   }
 
   return await api.post(REPORT_SUBMIT_ROUTE, submitData, {
-    withCredentials: true,
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -39,36 +60,30 @@ export const submitForm = async (formData: FormData) => {
 };
 
 export const trackReportById = async (reportId: string) => {
-  return await api.get(`/api/track-report/${reportId}`, {
-    withCredentials: true,
-  });
+  return await api.get(`/api/track-report/${reportId}`);
 };
 
-// admin login
-
+// Admin login
 export const adminLogin = async (email: string, password: string) => {
-  return api.post("/api/admin-login", {email, password});
+  return api.post("/api/admin/login", {email, password});
+};
+
+// Admin logout
+export const adminLogout = async () => {
+  return api.post("/api/admin/logout");
 };
 
 // Admin API functions
 export const getAllReports = async () => {
-  return await api.get("/api/admin/reports", {
-    withCredentials: true,
-  });
+  return await api.get("/api/admin/reports");
 };
 
 export const updateReportStatus = async (reportId: string, status: string) => {
-  return await api.patch(
-    `/api/admin/reports/${reportId}/status`,
-    {status},
-    {withCredentials: true}
-  );
+  return await api.patch(`/api/admin/reports/${reportId}/status`, {status});
 };
 
 export const getReportById = async (reportId: string) => {
-  return await api.get(`/api/admin/reports/${reportId}`, {
-    withCredentials: true,
-  });
+  return await api.get(`/api/admin/reports/${reportId}`);
 };
 
 export const analyzeImage = async (imageFile: File) => {
@@ -76,9 +91,11 @@ export const analyzeImage = async (imageFile: File) => {
   formData.append("image", imageFile);
 
   return await api.post("/api/analyze-image", formData, {
-    withCredentials: true,
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 };
+
+export const deleteReport = (id: string) =>
+  api.delete(`/api/admin/reports/${id}`);

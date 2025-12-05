@@ -1,5 +1,59 @@
 import {Admin} from "../models/admin.model.js";
 import {Report} from "../models/report.model.js";
+import bcrypt from "bcryptjs";
+import {generateToken} from "../utils/jwt-Utility-Fun.js";
+
+// Create new admin
+export const createAdmin = async (req, res) => {
+  try {
+    const {email, password} = req.body;
+
+    // Basic validation
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+        success: false,
+      });
+    }
+
+    // Check if admin exists
+    const existingAdmin = await Admin.findOne({email: email.toLowerCase()});
+    if (existingAdmin) {
+      return res.status(409).json({
+        message: "Email already exists",
+        success: false,
+      });
+    }
+
+    // Hash password and create admin
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = await Admin.create({
+      email: email.toLowerCase(),
+      password: hashedPassword,
+    });
+
+    // Generate token
+    const token = generateToken(newAdmin._id, newAdmin.email);
+
+    return res.status(201).json({
+      message: "Admin created successfully",
+      success: true,
+      data: {
+        admin: {
+          _id: newAdmin._id,
+          email: newAdmin.email,
+        },
+        token,
+      },
+    });
+  } catch (error) {
+    console.error("Create admin error:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
 
 export const adminLogin = async (req, res) => {
   try {
@@ -12,36 +66,60 @@ export const adminLogin = async (req, res) => {
         success: false,
       });
     }
+    // Find admin by email
+    const admin = await Admin.findOne({email: email.toLowerCase()});
 
-    // 2. Find admin by email and password
-    const admin = await Admin.findOne({email, password});
     if (!admin) {
       return res.status(401).json({
-        message: "Invalid email or password.",
+        message: "Invalid credentials",
         success: false,
+        errors: {auth: "Email or password is incorrect"},
       });
     }
 
-    // 3. Set session
-    req.session.adminId = admin._id;
-    req.session.admin = {
-      id: admin._id,
-      email: admin.email,
-    };
+    // Compare passwords
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
 
-    // 4. Success response
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        message: "Invalid credentials",
+        success: false,
+        errors: {auth: "Email or password is incorrect"},
+      });
+    }
+
+    const token = generateToken(admin._id, admin.email);
+
     return res.status(200).json({
-      message: "Admin login successful ✅",
+      message: "Login successful",
       success: true,
-      admin: {
-        id: admin._id,
-        email: admin.email,
+      data: {
+        admin: {
+          _id: admin._id,
+          email: admin.email,
+        },
+        token: token,
       },
     });
   } catch (error) {
-    console.error("Error during admin login:", error);
+    console.error("Login error:", error);
     return res.status(500).json({
       message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const Adminlogout = (req, res) => {
+  try {
+    return res.status(200).json({
+      message: "Logout successful",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+    return res.status(500).json({
+      message: "Logout failed",
       success: false,
     });
   }

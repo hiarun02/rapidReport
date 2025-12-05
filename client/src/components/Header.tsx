@@ -2,6 +2,8 @@ import {Link, useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import {LogOut} from "lucide-react";
 import {Button} from "./ui/button";
+import {adminLogout} from "@/api/api";
+import {toast} from "sonner";
 
 const navItems = [
   {
@@ -34,7 +36,7 @@ const Header = () => {
 
   // Load admin from localStorage on component mount
   useEffect(() => {
-    const savedAdmin = localStorage.getItem("adminUser");
+    const savedAdmin = localStorage.getItem("admin");
     if (savedAdmin) {
       setAdmin(JSON.parse(savedAdmin));
     }
@@ -55,10 +57,22 @@ const Header = () => {
   }, []);
 
   // logout
-  const handleLogout = () => {
-    localStorage.removeItem("adminUser");
-    setAdmin(null);
-    navigate("/admin/login");
+  const handleLogout = async () => {
+    try {
+      await adminLogout();
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("admin");
+      setAdmin(null);
+      toast.success("Logged out successfully");
+      navigate("/admin/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still logout even if API fails
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("admin");
+      setAdmin(null);
+      navigate("/admin/login");
+    }
   };
 
   const isDashboard = window.location.pathname === "/admin/dashboard";

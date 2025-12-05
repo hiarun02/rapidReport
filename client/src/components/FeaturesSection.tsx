@@ -1,43 +1,38 @@
-import {ImPower} from "react-icons/im";
-import {BiBarChartSquare} from "react-icons/bi";
-import {MdOutlineSecurity} from "react-icons/md";
-import {FaCamera} from "react-icons/fa";
-import {FaMobile} from "react-icons/fa";
-import {BiSolidCategoryAlt} from "react-icons/bi";
+import {Zap, TrendingUp, Lock, Camera, Smartphone, Grid3x3} from "lucide-react";
 
 const FeaturesSection = () => {
   const features = [
     {
-      icon: <ImPower />,
+      icon: <Zap className="w-8 h-8" />,
       title: "Instant Reporting",
       description:
         "Submit incident reports in seconds with our streamlined interface",
     },
     {
-      icon: <BiBarChartSquare />,
+      icon: <TrendingUp className="w-8 h-8" />,
       title: "Real-time Tracking",
       description:
         "Monitor your report status and receive updates as authorities respond",
     },
     {
-      icon: <MdOutlineSecurity />,
+      icon: <Lock className="w-8 h-8" />,
       title: "Secure & Anonymous",
       description:
         "Your privacy is protected with optional anonymous reporting",
     },
     {
-      icon: <FaCamera />,
+      icon: <Camera className="w-8 h-8" />,
       title: "Quick Report Mode",
       description:
         "Upload a photo and our AI will help you fill out the report details fast",
     },
     {
-      icon: <FaMobile/>,
+      icon: <Smartphone className="w-8 h-8" />,
       title: "Mobile Optimized",
       description: "Report incidents from anywhere using any device",
     },
     {
-      icon: <BiSolidCategoryAlt/>,
+      icon: <Grid3x3 className="w-8 h-8" />,
       title: "Incident Categorization",
       description: "Quickly classify reports as emergency or non-emergency.",
     },

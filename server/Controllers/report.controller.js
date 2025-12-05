@@ -85,33 +85,13 @@ export const submitReport = async (req, res) => {
       });
     }
 
-    // Image file validation
+    // Image file validation - multer already validated
     const file = req.file;
     if (!file) {
       return res.status(400).json({
         message: "Image file is required",
         success: false,
         errors: {image: "Please upload an image file"},
-      });
-    }
-
-    // Validate image file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-    if (file.size > maxSize) {
-      return res.status(400).json({
-        message: "Image file too large",
-        success: false,
-        errors: {image: "Image file size must be less than 5MB"},
-      });
-    }
-
-    // Validate image file type
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.mimetype)) {
-      return res.status(400).json({
-        message: "Invalid image format",
-        success: false,
-        errors: {image: "Only JPEG, PNG, and WebP images are allowed"},
       });
     }
 
@@ -155,7 +135,7 @@ export const submitReport = async (req, res) => {
 
     return res.status(201).json({
       reportId: newReport.reportId,
-      message: "Report submitted successfully ✅",
+      message: "Report submitted successfully",
       success: true,
     });
   } catch (error) {
@@ -210,6 +190,31 @@ export const findReportByReportId = async (req, res) => {
     });
   } catch (error) {
     console.error("Error finding report:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const deleteReport = async (req, res) => {
+  try {
+    const {id} = req.params;
+
+    const report = await Report.findByIdAndDelete(id);
+    if (!report) {
+      return res.status(404).json({
+        message: "Report not found",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Report deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error deleting report:", error);
     return res.status(500).json({
       message: "Internal Server Error",
       success: false,

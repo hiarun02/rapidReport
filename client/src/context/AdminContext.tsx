@@ -7,16 +7,16 @@ export type {AdminState, AdminUser};
 const AdminContext = createContext<AdminState | undefined>(undefined);
 
 export const AdminProvider = ({children}: AdminProviderProps) => {
-  const [admin, setAdminState] = useState<AdminUser | null>(() => { // 
-    const savedAdmin = localStorage.getItem("adminUser"); // 
+  const [admin, setAdminState] = useState<AdminUser | null>(() => {
+    const savedAdmin = localStorage.getItem("admin");
     return savedAdmin ? JSON.parse(savedAdmin) : null;
   });
 
   const setAdmin = (adminData: AdminUser | null) => {
     if (adminData) {
-      localStorage.setItem("adminUser", JSON.stringify(adminData));
+      localStorage.setItem("admin", JSON.stringify(adminData));
     } else {
-      localStorage.removeItem("adminUser");
+      localStorage.removeItem("admin");
     }
     setAdminState(adminData);
   };
