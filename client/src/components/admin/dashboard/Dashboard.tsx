@@ -5,6 +5,7 @@ import {Badge} from "../../ui/badge";
 import {
   getAllReports,
   updateReportStatus as updateReportStatusAPI,
+  deleteReport,
 } from "../../../api/api";
 import {toast} from "sonner";
 import {AxiosError} from "axios";
@@ -181,6 +182,19 @@ const Dashboard = () => {
       } else {
         toast.error("An unexpected error occurred");
       }
+    }
+  };
+
+  const handleDeleteReport = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this report?")) return;
+
+    try {
+      await deleteReport(id);
+      setReports((prev) => prev.filter((r) => r._id !== id));
+      toast.success("Report deleted successfully");
+    } catch (error) {
+      console.error("Error deleting report:", error);
+      toast.error("Failed to delete report");
     }
   };
 
@@ -364,6 +378,14 @@ const Dashboard = () => {
                           <option value="resolved">Resolved</option>
                           <option value="closed">Closed</option>
                         </select>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDeleteReport(report._id)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          Delete
+                        </Button>
                       </div>
                     </td>
                   </tr>

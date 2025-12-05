@@ -3,11 +3,8 @@ import {
   findReportByReportId,
   submitReport,
 } from "../Controllers/report.controller.js";
-import {
-  analyzeImage,
-  uploadMiddleware,
-} from "../Controllers/image-analyze.controler.js";
-import {multerUpload} from "../utils/multer.js";
+import {analyzeImage} from "../Controllers/image-analyze.controler.js";
+import {multerUpload, uploadMiddleware} from "../utils/multer.js";
 
 const router = express.Router();
 

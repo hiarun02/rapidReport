@@ -1,26 +1,8 @@
 import {GoogleGenAI} from "@google/genai";
-import multer from "multer";
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
-
-// Multer configuration for image uploads
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
-  },
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
-      cb(null, true);
-    } else {
-      cb(new Error("Only image files are allowed"), false);
-    }
-  },
-});
-
-export const uploadMiddleware = upload.single("image");
 
 export const analyzeImage = async (req, res) => {
   try {

@@ -4,21 +4,23 @@ import {
   adminLogin,
   updateReportStatus,
   getReportById,
+  Adminlogout,
+  createAdmin,
 } from "../Controllers/admin.controler.js";
-import {verifyAdmin} from "../Middlewares/adminMiddleweare.js";
+import {deleteReport} from "../Controllers/report.controller.js";
+import {isAuth} from "../Middlewares/isAuthenticated.js";
 
 const router = express.Router();
 
-router.post("/admin-login", adminLogin);
-router.get("/admin/reports", adminGetAllReport);
-router.patch("/admin/reports/:reportId/status", updateReportStatus);
-router.get("/admin/reports/:reportId", getReportById);
+// Public routes
+router.post("/admin/create", createAdmin);
+router.post("/admin/login", adminLogin);
 
-router.get("/admin/dashboard", verifyAdmin, (req, res) => {
-  res.status(200).json({
-    message: "Welcome to Admin Dashboard 🎉",
-    admin: req.session.admin,
-  });
-});
+// Protected routes
+router.post("/admin/logout", isAuth, Adminlogout);
+router.get("/admin/reports", isAuth, adminGetAllReport);
+router.patch("/admin/reports/:reportId/status", isAuth, updateReportStatus);
+router.get("/admin/reports/:reportId", isAuth, getReportById);
+router.delete("/admin/reports/:id", isAuth, deleteReport);
 
 export default router;
