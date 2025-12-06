@@ -596,7 +596,7 @@ const SubmitForm = () => {
                 </>
               ) : (
                 <>
-                  <MdLocationOn className="w-4 h-4" />
+                  <MapPin className="w-4 h-4" />
                 </>
               )}
             </Button>
