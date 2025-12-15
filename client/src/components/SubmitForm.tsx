@@ -46,6 +46,7 @@ const SubmitForm = () => {
     title: "",
     description: "",
     location: "",
+    reporterEmail: "",
   });
 
   // Generate report ID when component mounts
@@ -241,6 +242,7 @@ const SubmitForm = () => {
       title: "",
       description: "",
       location: "",
+      reporterEmail: "",
     });
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -662,6 +664,33 @@ const SubmitForm = () => {
             <p className="text-red-500 text-sm mt-2">{errors.description}</p>
           )}
         </div>
+
+        {/* Reporter Email */}
+        <div className="mb-5">
+          <Label htmlFor="reporterEmail" className="block mb-2">
+            Your Email (optional)
+          </Label>
+          <Input
+            id="reporterEmail"
+            type="email"
+            value={formData.reporterEmail}
+            onChange={(e) => {
+              setFormData((prev) => ({
+                ...prev,
+                reporterEmail: e.target.value,
+              }));
+              clearError("reporterEmail");
+            }}
+            placeholder="Enter your email to receive updates"
+            className={`border rounded-md p-2 w-full ${
+              errors.reporterEmail ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.reporterEmail && (
+            <p className="text-red-500 text-sm mt-2">{errors.reporterEmail}</p>
+          )}
+        </div>
+
         {/* Report Submission */}
         <div className="mb-5">
           <Button

@@ -36,6 +36,7 @@ interface FormData {
   title: string;
   description: string;
   location: string;
+  reporterEmail: string;
 }
 
 export const submitForm = async (formData: FormData) => {
@@ -47,6 +48,7 @@ export const submitForm = async (formData: FormData) => {
   submitData.append("title", formData.title);
   submitData.append("description", formData.description);
   submitData.append("location", formData.location);
+  submitData.append("reporterEmail", formData.reporterEmail);
 
   if (formData.imageFile) {
     submitData.append("imageFile", formData.imageFile);

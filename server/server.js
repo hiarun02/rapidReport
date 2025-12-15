@@ -1,8 +1,8 @@
 import express from "express";
 import "dotenv/config";
-import {DbConnect} from "./utils/DBConnection.js";
-import reportRoute from "./routes/report.route.js";
-import adminRoutes from "./routes/admin.route.js";
+import {DbConnect} from "./src/utils/DBConnection.js";
+import reportRoute from "./src/routes/report.route.js";
+import adminRoutes from "./src/routes/admin.route.js";
 import cors from "cors";
 
 const app = express();

@@ -16,6 +16,7 @@ const reportSchema = mongoose.Schema(
       type: String,
       default: "",
     },
+
     incidentType: {
       type: String,
       required: [true, "Incident type is required"],
@@ -59,12 +60,11 @@ const reportSchema = mongoose.Schema(
       enum: ["pending", "in-progress", "resolved", "closed"],
       default: "pending",
     },
-    priority: {
+    reporterEmail: {
       type: String,
-      enum: ["low", "medium", "high", "critical"],
-      default: function () {
-        return this.reportType === "emergency" ? "high" : "medium";
-      },
+    },
+    emailNotifications: {
+      type: Boolean,
     },
   },
   {

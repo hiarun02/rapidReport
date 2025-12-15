@@ -14,8 +14,8 @@ interface ReportData {
   title: string;
   description: string;
   location: string;
+  image?: string;
   status: "pending" | "in-progress" | "resolved" | "closed";
-  priority: "low" | "medium" | "high" | "critical";
   createdAt: string;
   updatedAt: string;
 }
@@ -35,7 +35,6 @@ const TrackReport = () => {
       return;
     }
 
-    
     setIsLoading(true);
     setHasSearched(true);
 
@@ -71,21 +70,6 @@ const TrackReport = () => {
         return "bg-green-100 text-green-800 border-green-200";
       case "closed":
         return "bg-gray-100 text-gray-800 border-gray-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "critical":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "high":
-        return "bg-orange-100 text-orange-800 border-orange-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low":
-        return "bg-green-100 text-green-800 border-green-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
     }
@@ -332,16 +316,6 @@ const TrackReport = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Priority Level
-                      </label>
-                      <Badge className={getPriorityColor(reportData.priority)}>
-                        {reportData.priority.charAt(0).toUpperCase() +
-                          reportData.priority.slice(1)}
-                      </Badge>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Incident Type
                       </label>
                       <p className="text-gray-900 capitalize">
@@ -377,6 +351,21 @@ const TrackReport = () => {
                     </div>
                   </div>
                 </div>
+
+                {reportData.image && (
+                  <div className="mb-8">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Incident Image
+                    </label>
+                    <div className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+                      <img
+                        src={reportData.image}
+                        alt="Incident attachment"
+                        className="w-full h-64 object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {/* Report Description */}
                 <div className="mb-8">

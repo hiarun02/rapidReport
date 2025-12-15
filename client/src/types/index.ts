@@ -36,6 +36,7 @@ export interface ReportData {
   title: string;
   description: string;
   location: string;
+  image?: string;
   status: "pending" | "in-progress" | "resolved" | "closed";
   priority: "low" | "medium" | "high" | "critical";
   createdAt: string;
@@ -107,6 +108,7 @@ export interface SubmitFormData {
   title: string;
   description: string;
   location: string;
+  reporterEmail: string;
 }
 
 // Login Form Data

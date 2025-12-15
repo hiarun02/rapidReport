@@ -17,7 +17,7 @@ const Hero = () => {
     },
   ];
   return (
-    <section className="bg-gradient-to-r from-red-500 to-red-600 text-white py-24">
+    <section className="bg-gradient-to-r from-red-500 to-red-600 text-white py-28">
       <div className="max-w-6xl mx-auto px-4 text-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-6">
           Report. <span className="text-red-200">Track.</span>{" "}
