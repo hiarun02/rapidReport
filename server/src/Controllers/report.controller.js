@@ -1,11 +1,20 @@
 import {Report} from "../models/report.model.js";
+import {sendReportSubmittedEmail} from "../services/email.service.js";
 import cloudinary from "../utils/CloudinaryConfig.js";
 import getDataUri from "../utils/dataUri.js";
 
 export const submitReport = async (req, res) => {
   try {
-    const {reportId, reportType, incidentType, title, description, location} =
-      req.body;
+    const {
+      reportId,
+      reportType,
+      incidentType,
+      title,
+      description,
+      location,
+      reporterEmail,
+      emailNotifications = !!reporterEmail,
+    } = req.body;
 
     // Comprehensive validation with detailed error messages
     const errors = {};
@@ -131,7 +140,16 @@ export const submitReport = async (req, res) => {
       description: description.trim(),
       location: location.trim(),
       image: cloudResponse.secure_url,
+      reporterEmail: reporterEmail?.trim() || null,
+      emailNotifications,
     });
+
+    // Send notification email if enabled
+    if (newReport.emailNotifications) {
+      sendReportSubmittedEmail(newReport).catch((err) =>
+        console.error("Email send failed:", err)
+      );
+    }
 
     return res.status(201).json({
       reportId: newReport.reportId,
@@ -175,6 +193,7 @@ export const findReportByReportId = async (req, res) => {
       title: report.title,
       description: report.description,
       location: report.location,
+      image: report.image,
       status: report.status || "pending",
       priority:
         report.priority ||

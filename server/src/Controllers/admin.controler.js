@@ -2,6 +2,7 @@ import {Admin} from "../models/admin.model.js";
 import {Report} from "../models/report.model.js";
 import bcrypt from "bcryptjs";
 import {generateToken} from "../utils/jwt-Utility-Fun.js";
+import {sendReportUpdateEmail} from "../services/email.service.js";
 
 // Create new admin
 export const createAdmin = async (req, res) => {
@@ -184,6 +185,12 @@ export const updateReportStatus = async (req, res) => {
         message: "Report not found.",
         success: false,
       });
+    }
+
+    if (report.emailNotifications) {
+      sendReportUpdateEmail(report).catch((err) =>
+        console.error("Email send failed:", err)
+      );
     }
 
     return res.status(200).json({
